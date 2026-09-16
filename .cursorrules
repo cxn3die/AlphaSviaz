@@ -1,0 +1,56 @@
+# Cursor Rules для проекта Альфа-Связь
+
+## Стек
+- Next.js 14 App Router
+- TypeScript strict
+- Tailwind CSS
+- shadcn/ui
+- Framer Motion
+- Lucide React icons
+
+## Правила кода
+- Все компоненты — функциональные с TypeScript
+- Используй "use client" только когда необходимо (формы, анимации, интерактив)
+- Серверные компоненты по умолчанию
+- Импорты через @/
+- Названия компонентов в PascalCase
+- Названия файлов компонентов: PascalCase.tsx
+- Названия утилит и data: camelCase.ts
+
+## Стиль
+- Используй cn() из @/lib/utils для условных классов
+- Tailwind классы группируй логически: layout → spacing → typography → colors → effects
+- Адаптивность mobile-first: базовые классы → sm: → md: → lg: → xl:
+- Контейнер: используй className="container mx-auto"
+
+## Компоненты
+- Переиспользуемые секции — в components/sections/
+- Layout (Header, Footer) — в components/layout/
+- Формы — в components/forms/
+- shadcn компоненты — в components/ui/
+
+## Данные
+- Все mock-данные в lib/data/*.ts
+- Типы рядом с данными или в lib/types.ts
+
+## Дизайн-система
+- Заголовки H1-H3 — font-heading (Manrope)
+- Текст — font-sans (Inter)
+- Минимальный размер текста на десктопе: text-base (16px)
+- На мобильном можно text-sm (14px), но не меньше
+- CTA-кнопки используют цвет cta (оранжевый)
+- Основные действия — accent (синий)
+- Тёмные секции — primary (тёмно-синий)
+
+## Анимации
+- Используй Framer Motion для появления секций при скролле
+- viewport={{ once: true }} чтобы анимация срабатывала один раз
+- Длительность 0.5-0.8s, easeOut
+
+## Что НЕ делать
+- НЕ использовать !important
+- НЕ использовать inline styles если можно через Tailwind
+- НЕ создавать огромные компоненты — дроби на подкомпоненты
+- НЕ забывать про alt у изображений
+- НЕ использовать <img>, используй next/image
+- НЕ хардкодить тексты в JSX когда есть data-файлы

@@ -1,0 +1,236 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 215 65% 10%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 73% 42%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 210 73% 42%;
+    --accent-foreground: 0 0% 100%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 20% 47%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 210 73% 42%;
+    --radius: 0.75rem;
+    --cta: 17 89% 54%;
+    --cta-foreground: 0 0% 100%;
+    --orange: 17 89% 54%;
+    --orange-hover: 21 100% 62%;
+    --orange-active: 17 84% 46%;
+    --orange-soft: 17 89% 54% / 0.1;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+}
+
+@keyframes projects-mosaic-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.projects-mosaic-tile {
+  animation: projects-mosaic-float 4.5s ease-in-out infinite;
+}
+
+.projects-mosaic-tile-1 {
+  animation-delay: 0s;
+}
+.projects-mosaic-tile-2 {
+  animation-delay: 0.4s;
+}
+.projects-mosaic-tile-3 {
+  animation-delay: 0.8s;
+}
+.projects-mosaic-tile-4 {
+  animation-delay: 1.2s;
+}
+.projects-mosaic-tile-5 {
+  animation-delay: 1.6s;
+}
+.projects-mosaic-tile-6 {
+  animation-delay: 2s;
+}
+
+@keyframes about-hub-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-hub-card {
+  opacity: 0;
+  animation: about-hub-reveal 0.55s ease-out forwards;
+}
+
+.about-hub-card-1 {
+  animation-delay: 0.15s;
+}
+.about-hub-card-2 {
+  animation-delay: 0.3s;
+}
+.about-hub-card-3 {
+  animation-delay: 0.45s;
+}
+.about-hub-card-4 {
+  animation-delay: 0.6s;
+}
+
+@keyframes projects-rec {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes about-orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes about-orbit-counter {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes about-pulse-ring {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.15;
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.5;
+  }
+}
+
+.brand-diagonal-rail {
+  position: absolute;
+  display: flex;
+  gap: clamp(3rem, 10vw, 8rem);
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.brand-diagonal-phrase {
+  font-family: var(--font-manrope), sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  user-select: none;
+}
+
+.brand-diagonal-phrase--light {
+  font-size: clamp(5rem, 22vw, 18rem);
+  color: rgba(255, 255, 255, 0.055);
+}
+
+.brand-diagonal-phrase--blue {
+  font-size: clamp(4rem, 16vw, 13rem);
+  color: rgba(66, 165, 245, 0.07);
+}
+
+.brand-diagonal-phrase--ghost {
+  font-size: clamp(3.5rem, 12vw, 9rem);
+  color: rgba(255, 255, 255, 0.03);
+}
+
+.brand-diagonal-rail--primary {
+  top: 18%;
+  left: -25%;
+  transform: rotate(-24deg);
+  animation: brand-diagonal-drift-a 36s ease-in-out infinite alternate;
+}
+
+.brand-diagonal-rail--secondary {
+  bottom: 8%;
+  right: -30%;
+  transform: rotate(-24deg);
+  animation: brand-diagonal-drift-b 28s ease-in-out infinite alternate-reverse;
+}
+
+.brand-diagonal-rail--accent {
+  top: 48%;
+  left: -15%;
+  transform: rotate(-24deg);
+  animation: brand-diagonal-drift-c 42s linear infinite;
+}
+
+@keyframes brand-diagonal-drift-a {
+  0% {
+    transform: rotate(-24deg) translate3d(-8%, 6%, 0);
+  }
+  100% {
+    transform: rotate(-24deg) translate3d(14%, -10%, 0);
+  }
+}
+
+@keyframes brand-diagonal-drift-b {
+  0% {
+    transform: rotate(-24deg) translate3d(12%, -6%, 0);
+  }
+  100% {
+    transform: rotate(-24deg) translate3d(-16%, 12%, 0);
+  }
+}
+
+@keyframes brand-diagonal-drift-c {
+  0% {
+    transform: rotate(-24deg) translate3d(-22%, 18%, 0);
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: rotate(-24deg) translate3d(22%, -18%, 0);
+    opacity: 0.35;
+  }
+}
