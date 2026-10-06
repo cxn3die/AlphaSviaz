@@ -1,5 +1,4 @@
 import { AboutProjectTeamSection } from "@/components/sections/about/AboutProjectTeamSection";
-import { AboutGuaranteeBanner } from "@/components/sections/about/AboutGuaranteeBanner";
 import { AboutPageHero } from "@/components/sections/about/AboutPageHero";
 import { AboutProcessTimeline } from "@/components/sections/about/AboutProcessTimeline";
 import { AboutServicesHub } from "@/components/sections/about/AboutServicesHub";
@@ -14,7 +13,8 @@ export const metadata = {
 /**
  * Порядок блоков отвечает на вопросы клиента в том порядке,
  * в котором он их задаёт: кто вы → что умеете → кто поведёт
- * мой объект → как это будет → чем отвечаете.
+ * мой объект → как это будет → чем отвечаете и куда писать
+ * (заявка и гарантия — одна плашка).
  *
  * Фон чередуется тёмный / светлый, иначе секции сливаются
  * в одно полотно.
@@ -26,8 +26,7 @@ export default function AboutPage() {
       <AboutServicesHub />
       <AboutProjectTeamSection />
       <AboutProcessTimeline />
-      <AboutGuaranteeBanner />
-      <PageCtaSection />
+      <PageCtaSection withGuarantee />
     </div>
   );
 }
