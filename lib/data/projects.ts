@@ -150,7 +150,7 @@ export const projects: ProjectItem[] = [
     result:
       "Каждый заезд транспорта зафиксирован и связан с номером машины. Спорные рейсы разбираются по архиву, а не по памяти сотрудников.",
     image: "/images/projects/gudrok.webp",
-    imageAlt: "Контрольно-пропускной пункт со шлагбаумом на въезде промплощадки",
+    imageAlt: "Самосвал и асфальтоукладчик на строящейся дороге",
     illustrative: true,
     featured: true,
   },
@@ -167,7 +167,7 @@ export const projects: ProjectItem[] = [
     result:
       "Любую операцию можно проверить за минуту: чек и видео открываются вместе. Расхождения находятся сразу, потери на кассах снизились.",
     image: "/images/projects/nevsky-konditer.webp",
-    imageAlt: "Пост видеонаблюдения с мультиэкранами камер",
+    imageAlt: "Витрина кондитерской с тортами и пирожными",
     illustrative: true,
     featured: true,
   },
@@ -184,7 +184,7 @@ export const projects: ProjectItem[] = [
     result:
       "Объективные данные по простою техники вместо оценок на глаз — стало на что опереться при планировании смен и расчёте аренды.",
     image: "/images/projects/betonium.webp",
-    imageAlt: "Башенный кран на строительной площадке",
+    imageAlt: "Башенные краны над строительной площадкой",
     illustrative: true,
   },
   {
@@ -217,7 +217,7 @@ export const projects: ProjectItem[] = [
     result:
       "Единая сеть на всей площадке — проводные рабочие места и беспроводное покрытие в производственных помещениях.",
     image: "/images/projects/penzaspetsavtomash.webp",
-    imageAlt: "Коммутационный шкаф с патч-кордами",
+    imageAlt: "Сборка спецтехники в производственном цехе",
     illustrative: true,
   },
   {
@@ -233,7 +233,7 @@ export const projects: ProjectItem[] = [
     result:
       "Каждый проход фиксируется автоматически, охрана видит карточку сотрудника в момент прохода, табель формируется системой.",
     image: "/images/projects/3d-master.webp",
-    imageAlt: "Электронная проходная со считывателями на входной группе",
+    imageAlt: "Турникеты на проходной в остеклённом вестибюле",
     illustrative: true,
   },
   {
@@ -249,7 +249,7 @@ export const projects: ProjectItem[] = [
     result:
       "Территория под охраной, а состояние оборудования котельной видно удалённо — показания снимаются без выхода в помещение.",
     image: "/images/projects/mega-master.webp",
-    imageAlt: "Специалист настраивает котельное оборудование",
+    imageAlt: "Трубопроводы и манометры в котельной",
     illustrative: true,
   },
   {
@@ -264,7 +264,7 @@ export const projects: ProjectItem[] = [
     result:
       "На территорию заезжает только транспорт с правом доступа — парковка используется по назначению.",
     image: "/images/projects/institut-razvitiya.webp",
-    imageAlt: "Автоматический шлагбаум с камерой распознавания номеров",
+    imageAlt: "Автоматический шлагбаум на въезде на парковку",
     illustrative: true,
   },
   {
@@ -280,7 +280,7 @@ export const projects: ProjectItem[] = [
     result:
       "Требования по антитеррористической защищённости закрыты, периметр и въезды под непрерывным наблюдением.",
     image: "/images/projects/airport-penza.webp",
-    imageAlt: "Зал ожидания аэропорта с видом на перрон",
+    imageAlt: "Самолёт на рулёжной дорожке за ограждением периметра аэродрома",
     illustrative: true,
   },
   {
@@ -296,7 +296,7 @@ export const projects: ProjectItem[] = [
     result:
       "Посторонние на территорию не попадают, при нештатной ситуации у персонала есть картинка для быстрого реагирования.",
     image: "/images/projects/sanatoriy-niva.webp",
-    imageAlt: "Камеры наблюдения на опоре по периметру территории",
+    imageAlt: "Корпус санатория в парке с цветниками",
     illustrative: true,
   },
   {
@@ -312,7 +312,7 @@ export const projects: ProjectItem[] = [
     result:
       "Спорные заказы разбираются по записи, повреждения и брак фиксируются, требования площадок по видеоподтверждению выполнены.",
     image: "/images/projects/stella.webp",
-    imageAlt: "Сотрудники на участке комплектации заказов",
+    imageAlt: "Сотрудница проверяет заказ на участке упаковки посылок",
     illustrative: true,
   },
   {
@@ -328,7 +328,7 @@ export const projects: ProjectItem[] = [
     result:
       "Сигнал слышен и понятен в каждой зоне, эвакуация идёт по заданному маршруту, а не стихийно.",
     image: "/images/projects/kamensky-college.webp",
-    imageAlt: "Указатель эвакуационного выхода и светозвуковой оповещатель",
+    imageAlt: "Коридор учебного корпуса",
     illustrative: true,
   },
   {
@@ -344,7 +344,7 @@ export const projects: ProjectItem[] = [
     result:
       "Потери снизились, погрузка и разгрузка под контролем, по залу появились данные для перестановки выкладки.",
     image: "/images/projects/kerama-marazzi.webp",
-    imageAlt: "Керамическая плитка на складских стеллажах",
+    imageAlt: "Образцы керамической плитки в торговом зале",
     illustrative: true,
   },
 ];
