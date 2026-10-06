@@ -138,13 +138,10 @@ function ProjectsStat({ inView, className }: { inView: boolean; className: strin
   }
 
   const numberRef = useRef<HTMLSpanElement | null>(null);
-  const lineRef = useRef<HTMLDivElement | null>(null);
-  const fit = useFitToWidth(numberRef, lineRef, monthLine);
+  const metrics = useNumberMetrics(numberRef);
 
   const reveal =
     "opacity-0 translate-y-1 transition-[opacity,transform] duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-data-[revealed=true]:translate-y-0 group-data-[revealed=true]:opacity-100";
-  // Строки ровно по ширине числа: justify + выравнивание последней строки
-  const justify = "text-justify [text-align-last:justify]";
 
   return (
     <div className="mt-2">
@@ -155,34 +152,27 @@ function ProjectsStat({ inView, className }: { inView: boolean; className: strin
       </p>
 
       {/*
-        Ширина блока = ширина числа (width задаёт хук). Первая строка
-        растянута ровно по числу, вторая прижата к той же правой границе.
+        Строки мелкие и почти вплотную под цифрами: отступ снизу у строки
+        цифр (место под «хвосты» букв) снимается отрицательным margin.
+        Ширина блока = ширина числа, текст прижат к его правому краю.
       */}
       <div
-        className="group/month mt-2 md:mt-3"
-        style={fit ? { width: fit.width } : undefined}
+        className="group/month"
+        style={metrics ? { width: metrics.width, marginTop: -metrics.gapBelow + 6 } : undefined}
       >
-        <div
-          ref={lineRef}
-          className={cn("font-bold leading-[1.15] text-[18px] md:text-[22px]", reveal)}
-          style={fit ? { fontSize: fit.size } : undefined}
-        >
-          {fit?.lines ? (
-            fit.lines.map((line) => (
-              <span key={line} className={cn("stat-sheen block whitespace-nowrap", justify)}>
-                {line}
-              </span>
-            ))
-          ) : (
-            <span className={cn("stat-sheen block", justify)}>{monthLine || "\u00A0"}</span>
-          )}
-        </div>
         <p
           className={cn(
-            "mt-1 text-right font-semibold text-white/70 text-[14px]",
+            "text-right text-[13px] font-semibold leading-snug [text-wrap:balance] md:text-[15px] lg:text-[18px]",
+            reveal
+          )}
+        >
+          <span className="stat-sheen">{monthLine || "\u00A0"}</span>
+        </p>
+        <p
+          className={cn(
+            "mt-0.5 text-right text-[11px] font-medium text-white/65 md:text-[12px] lg:text-[14px]",
             "opacity-0 transition-opacity duration-500 ease-out group-hover/month:opacity-100 group-data-[revealed=true]:opacity-100"
           )}
-          style={fit ? { fontSize: Math.max(12, Math.round(fit.size * 0.62)) } : undefined}
         >
           {stats ? `в среднем ${stats.averagePerMonth} в месяц` : "\u00A0"}
         </p>
@@ -192,65 +182,46 @@ function ProjectsStat({ inView, className }: { inView: boolean; className: strin
 }
 
 /**
- * Подбирает размер шрифта строки так, чтобы она была ровно в ширину числа.
- * Если в одну строку шрифт выходит мельче 13px (узкий телефон) — делит
- * текст на две примерно равные строки и подбирает размер под них.
- * Следит за шириной числа (она меняется при счёте и при повороте экрана).
+ * Ширина числа и пустое место под цифрами внутри строки (у цифр нет
+ * «хвостов», а строка оставляет под них место). Следит за шириной числа:
+ * она меняется при счёте и при повороте экрана.
  */
-function useFitToWidth(
-  numberRef: RefObject<HTMLElement>,
-  lineRef: RefObject<HTMLElement>,
-  text: string
-) {
-  const [fit, setFit] = useState<{ width: number; size: number; lines: string[] | null } | null>(null);
+function useNumberMetrics(numberRef: RefObject<HTMLElement>) {
+  const [metrics, setMetrics] = useState<{ width: number; gapBelow: number } | null>(null);
 
   useEffect(() => {
-    const numberEl = numberRef.current;
-    const lineEl = lineRef.current;
-    if (!numberEl || !lineEl || !text) return;
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const el = numberRef.current;
+    if (!el) return;
+    const ctx = document.createElement("canvas").getContext("2d");
 
     const measure = () => {
-      const width = numberEl.getBoundingClientRect().width;
-      if (!width) return;
-      const style = getComputedStyle(lineEl);
-      ctx.font = `${style.fontWeight} 100px ${style.fontFamily}`;
-      const at100 = (value: string) => ctx.measureText(value).width;
-
-      const single = (100 * width) / at100(text);
-      if (single >= 13) {
-        setFit({ width, size: Math.min(single, 40), lines: null });
-        return;
-      }
-
-      // Делим по пробелу, ближайшему к середине
-      const words = text.split(" ");
-      let best: [string, string] = [text, ""];
-      let bestDiff = Infinity;
-      for (let i = 1; i < words.length; i += 1) {
-        const a = words.slice(0, i).join(" ");
-        const b = words.slice(i).join(" ");
-        const diff = Math.abs(at100(a) - at100(b));
-        if (diff < bestDiff) {
-          bestDiff = diff;
-          best = [a, b];
+      const rect = el.getBoundingClientRect();
+      if (!rect.width) return;
+      const style = getComputedStyle(el);
+      const fontSize = parseFloat(style.fontSize);
+      let gapBelow = fontSize * 0.2;
+      if (ctx) {
+        ctx.font = `${style.fontWeight} ${fontSize}px ${style.fontFamily}`;
+        const m = ctx.measureText("0123456789");
+        const ascent = m.fontBoundingBoxAscent;
+        const descent = m.fontBoundingBoxDescent;
+        if (ascent && descent) {
+          // Высота строки = высоте блока; базовая линия делит лишнее место поровну
+          const baseline = (rect.height - (ascent + descent)) / 2 + ascent;
+          gapBelow = Math.max(0, rect.height - baseline - m.actualBoundingBoxDescent);
         }
       }
-      const size = (100 * width) / Math.max(at100(best[0]), at100(best[1]));
-      setFit({ width, size: Math.min(size, 40), lines: best });
+      setMetrics({ width: rect.width, gapBelow });
     };
 
     measure();
     document.fonts?.ready.then(measure);
     const observer = new ResizeObserver(measure);
-    observer.observe(numberEl);
+    observer.observe(el);
     return () => observer.disconnect();
-  }, [numberRef, lineRef, text]);
+  }, [numberRef]);
 
-  return fit;
+  return metrics;
 }
 
 const containerVariants: Variants = {
