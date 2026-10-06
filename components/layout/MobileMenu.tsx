@@ -8,7 +8,7 @@ import { createPortal } from "react-dom";
 
 import { HeaderBrand } from "@/components/layout/HeaderBrand";
 import { siteConfig } from "@/lib/data/site";
-import { mainNav } from "@/lib/navigation";
+import { REQUEST_HREF, mainNav } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 type MobileMenuProps = {
@@ -56,7 +56,7 @@ export function MobileMenu({ inverted = false }: MobileMenuProps) {
     mounted && open
       ? createPortal(
           <div
-            className="fixed inset-0 z-[9999] md:hidden"
+            className="fixed inset-0 z-[9999] lg:hidden"
             role="dialog"
             aria-modal="true"
             aria-label="Мобильное меню"
@@ -99,25 +99,38 @@ export function MobileMenu({ inverted = false }: MobileMenuProps) {
                 <hr className="my-8 border-[#E5E9F0]" />
 
                 <div className="rounded-[12px] border border-[#E5E9F0] p-4">
-                  <p className="text-[12px] text-[#475467]">Звонок бесплатный</p>
+                  <p className="text-[12px] text-[#475467]">
+                    {siteConfig.contacts.workingHours}
+                  </p>
                   <a
                     href={siteConfig.contacts.phoneLink}
-                    className="mt-1 inline-flex items-center gap-2 break-all text-[22px] font-bold text-[#101828] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2 sm:text-[24px]"
+                    className="mt-1 inline-flex items-center gap-2 whitespace-nowrap text-[22px] font-bold text-[#101828] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2 sm:text-[24px]"
                   >
                     <Phone className="size-5 shrink-0 text-[#1E88E5]" />
                     {siteConfig.contacts.phone}
                   </a>
+                  {siteConfig.contacts.phoneSecondary && (
+                    <a
+                      href={siteConfig.contacts.phoneSecondaryLink}
+                      className="mt-2 block text-[15px] font-medium text-[#475467] transition hover:text-[#1E88E5]"
+                    >
+                      {siteConfig.contacts.phoneSecondary}
+                      <span className="ml-2 text-[12px] text-[#98A2B3]">
+                        бесплатно по России
+                      </span>
+                    </a>
+                  )}
                 </div>
               </div>
 
               <div className="border-t border-[#E5E9F0] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-                <button
-                  type="button"
+                <Link
+                  href={REQUEST_HREF}
                   onClick={handleClose}
-                  className="w-full rounded-[8px] bg-[#1E88E5] px-7 py-[14px] text-[15px] font-semibold text-white transition hover:bg-[#42A5F5] hover:shadow-[0_0_0_4px_rgba(30,136,229,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2"
+                  className="block w-full rounded-[8px] bg-[#1E88E5] px-7 py-[14px] text-center text-[15px] font-semibold text-white transition hover:bg-[#42A5F5] hover:shadow-[0_0_0_4px_rgba(30,136,229,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2"
                 >
                   Заказать звонок
-                </button>
+                </Link>
               </div>
             </aside>
           </div>,
@@ -126,7 +139,7 @@ export function MobileMenu({ inverted = false }: MobileMenuProps) {
       : null;
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}

@@ -1,60 +1,26 @@
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
 
+import { BrandLogo } from "@/components/layout/BrandLogo";
 import { cn } from "@/lib/utils";
 
 type LogoProps = {
+  /** light — для светлого фона, dark — для тёмного */
   variant?: "light" | "dark";
   className?: string;
-  compactOnMobile?: boolean;
 };
 
-export function Logo({
-  variant = "light",
-  className,
-  compactOnMobile = false,
-}: LogoProps) {
-  const isDark = variant === "dark";
-
+export function Logo({ variant = "light", className }: LogoProps) {
   return (
     <Link
       href="/"
       className={cn(
-        "inline-flex items-center",
-        compactOnMobile ? "gap-2 md:gap-3" : "gap-3",
+        "inline-flex items-center rounded-md",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2",
         className
       )}
-      aria-label="Альфа-Связь"
+      aria-label="Альфа-Связь — на главную"
     >
-      <ShieldCheck
-        className={cn(
-          "shrink-0",
-          compactOnMobile ? "size-8 md:size-9" : "size-9",
-          isDark ? "text-cta" : "text-orange-500"
-        )}
-        strokeWidth={2}
-      />
-      <span className="flex flex-col leading-none">
-        <span
-          className={cn(
-            "font-heading font-bold",
-            compactOnMobile ? "text-lg md:text-xl" : "text-xl",
-            isDark ? "text-white" : "text-foreground"
-          )}
-        >
-          Альфа-Связь
-        </span>
-        <span
-          className={cn(
-            "mt-1 uppercase tracking-wider opacity-70",
-            compactOnMobile ? "text-[10px] md:text-xs" : "text-xs",
-            isDark ? "text-white" : "text-foreground"
-          )}
-        >
-          системы безопасности
-        </span>
-      </span>
+      <BrandLogo variant={variant === "dark" ? "light" : "color"} className="h-9" />
     </Link>
   );
 }

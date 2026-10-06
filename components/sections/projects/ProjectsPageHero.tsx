@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 
+import { LiveProjectsTotal } from "@/components/stats/LiveProjectsTotal";
 import { projectsPageCopy, projectsPageStats } from "@/lib/data/projects";
 
 export function ProjectsPageHero() {
@@ -75,7 +76,7 @@ export function ProjectsPageHero() {
               className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-4 backdrop-blur-sm md:px-5 md:py-5"
             >
               <p className="font-heading text-2xl font-bold text-[#64B5F6] md:text-3xl">
-                {stat.value}
+                {stat.id === "projects" ? <LiveProjectsTotal /> : stat.value}
               </p>
               <p className="mt-1 text-xs leading-snug text-white/55 md:text-sm">
                 {stat.label}

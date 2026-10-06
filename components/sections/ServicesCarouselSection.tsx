@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
+import { REQUEST_HREF } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 type ServiceSlide = {
@@ -153,8 +154,13 @@ export function ServicesCarouselSection() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="absolute inset-0 z-[2]"
             >
-              <div className="absolute bottom-[88px] left-4 right-4 z-[3] max-w-[620px] sm:bottom-[100px] sm:left-6 sm:right-6 md:bottom-20 md:left-[60px] md:right-auto">
-                <h2 className="font-heading text-[clamp(1.375rem,6.2vw,2.25rem)] font-bold leading-[1.08] tracking-[-0.02em] text-white [overflow-wrap:anywhere] hyphens-auto sm:text-[clamp(1.75rem,4.5vw,3rem)] md:text-[clamp(2.5rem,5vw,4.5rem)]">
+              {/*
+                Размер заголовка подобран так, чтобы самое длинное слово
+                («ВИДЕОНАБЛЮДЕНИЕ») целиком влезало в блок на любой ширине:
+                раньше с 1280px оно рвалось на «ВИДЕОНАБЛЮДЕ / НИЕ».
+              */}
+              <div className="absolute bottom-[88px] left-4 right-4 z-[3] max-w-[720px] sm:bottom-[100px] sm:left-6 sm:right-6 md:bottom-20 md:left-[60px] md:right-auto">
+                <h2 className="font-heading text-[clamp(1.375rem,6.2vw,2.25rem)] font-bold leading-[1.08] tracking-[-0.02em] text-white [overflow-wrap:break-word] [text-wrap:balance] sm:text-[clamp(1.75rem,4.5vw,3rem)] md:text-[clamp(2.25rem,4.2vw,3.75rem)]">
                   {activeSlide.title}
                 </h2>
                 <p className="mt-3 max-w-[480px] text-base leading-relaxed text-white/85 sm:mt-4 sm:text-lg md:text-[20px]">
@@ -171,12 +177,12 @@ export function ServicesCarouselSection() {
                       →
                     </span>
                   </Link>
-                  <button
-                    type="button"
+                  <Link
+                    href={REQUEST_HREF}
                     className="inline-flex w-full items-center justify-center rounded-[12px] border border-white/30 bg-white/12 px-6 py-3.5 text-[15px] font-semibold text-white backdrop-blur-[10px] transition duration-300 hover:border-white/50 hover:bg-white/22 sm:w-auto sm:px-8 sm:py-4 sm:text-[16px]"
                   >
                     Заказать
-                  </button>
+                  </Link>
                 </div>
               </div>
             </motion.div>

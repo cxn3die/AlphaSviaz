@@ -1,7 +1,9 @@
-﻿import { AppImage as Image } from "@/components/ui/app-image";
+﻿import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 
+import { AppImage as Image } from "@/components/ui/app-image";
 import { heroContent } from "@/lib/data/hero";
+import { REQUEST_HREF } from "@/lib/navigation";
 
 export function HeroSection() {
   const { equipment } = heroContent;
@@ -23,18 +25,18 @@ export function HeroSection() {
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
-            <button
-              type="button"
-              className="inline-flex h-12 items-center justify-center rounded-[8px] bg-[#1E88E5] px-7 text-[15px] font-semibold text-white transition hover:bg-[#42A5F5] hover:shadow-[0_0_0_4px_rgba(30,136,229,0.15)]"
+            <Link
+              href={REQUEST_HREF}
+              className="inline-flex h-12 items-center justify-center rounded-[8px] bg-[#1E88E5] px-7 text-[15px] font-semibold text-white transition hover:bg-[#42A5F5] hover:shadow-[0_0_0_4px_rgba(30,136,229,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071A2F]"
             >
               Оставить заявку
-            </button>
-            <button
-              type="button"
-              className="inline-flex h-12 items-center justify-center rounded-[8px] border border-[#1E88E5] px-7 text-[15px] font-semibold text-white transition hover:bg-[#1E88E5]/20"
+            </Link>
+            <Link
+              href="/services"
+              className="inline-flex h-12 items-center justify-center rounded-[8px] border border-[#1E88E5] px-7 text-[15px] font-semibold text-white transition hover:bg-[#1E88E5]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#071A2F]"
             >
               Наши услуги
-            </button>
+            </Link>
           </div>
 
           <div className="mt-12 inline-flex max-w-lg items-start gap-4 rounded-[16px] border border-white/15 bg-white/8 px-5 py-4 backdrop-blur-md sm:px-6 sm:py-5">

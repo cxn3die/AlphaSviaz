@@ -21,13 +21,13 @@ export const metadata = {
  */
 export default function AboutPage() {
   return (
-    <main className="bg-[#0C2340]">
+    <div className="bg-[#0C2340]">
       <AboutPageHero />
       <AboutServicesHub />
       <AboutProjectTeamSection />
       <AboutProcessTimeline />
       <AboutGuaranteeBanner />
       <PageCtaSection />
-    </main>
+    </div>
   );
 }

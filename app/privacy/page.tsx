@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main className="bg-[#0C2340]">
+    <div className="bg-[#0C2340]">
       <PageHero
         title="Политика конфиденциальности"
         description="Порядок обработки персональных данных пользователей сайта."
@@ -18,6 +18,6 @@ export default function PrivacyPage() {
         ]}
       />
       <PrivacyContentSection />
-    </main>
+    </div>
   );
 }

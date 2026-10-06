@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -60,7 +62,8 @@ export function ContactFormMock({ variant = "default" }: ContactFormMockProps) {
       </button>
       <p className={cn("text-xs", isDark ? "text-white/45" : "text-[#475467]")}>
         Нажимая кнопку, вы соглашаетесь с{" "}
-        <a
+        {/* Только Link: обычный <a href="/privacy"> теряет префикс GitHub Pages и ведёт на 404 */}
+        <Link
           href="/privacy"
           className={cn(
             "hover:underline",
@@ -68,7 +71,7 @@ export function ContactFormMock({ variant = "default" }: ContactFormMockProps) {
           )}
         >
           политикой конфиденциальности
-        </a>
+        </Link>
         .
       </p>
     </form>

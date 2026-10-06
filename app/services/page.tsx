@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function ServicesPage() {
   return (
-    <main className="bg-[#0C2340]">
+    <div className="bg-[#0C2340]">
       <PageHero
         title="Услуги"
         description={siteConfig.description}
@@ -24,6 +24,6 @@ export default function ServicesPage() {
       <ServicesOverviewSection />
       <WorkStepsSection />
       <PageCtaSection />
-    </main>
+    </div>
   );
 }

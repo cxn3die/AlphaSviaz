@@ -8,8 +8,13 @@ export function ContactsSection() {
   return (
     <section className="py-16 md:py-20">
       <div className="container mx-auto px-4">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
+        {/*
+          grid-cols-1 = minmax(0, 1fr). Без него колонка не сжимается уже
+          386px: карта с aspect-ratio и min-height задаёт минимальную ширину,
+          и на телефонах адрес, карта и форма уезжали за край экрана.
+        */}
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="min-w-0">
             <h2 className="font-heading text-xl font-bold text-white">
               Связаться с нами
             </h2>
@@ -92,7 +97,10 @@ export function ContactsSection() {
             <ContactMap />
           </div>
 
-          <div className="rounded-[20px] bg-white/[0.04] p-6 backdrop-blur-sm md:p-8">
+          <div
+            id="request"
+            className="min-w-0 scroll-mt-28 rounded-[20px] bg-white/[0.04] p-6 backdrop-blur-sm md:p-8"
+          >
             <h2 className="font-heading text-xl font-bold text-white">
               Оставить заявку
             </h2>
