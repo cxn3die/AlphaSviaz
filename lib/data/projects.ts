@@ -1,3 +1,5 @@
+import { companyFacts } from "@/lib/data/site";
+
 export type ProjectCategory =
   | "Видеонаблюдение"
   | "СКУД"
@@ -95,7 +97,7 @@ export const projectIndustryById: Record<string, ProjectIndustry> = {
 
 export const projectsPageStats = [
   { id: "projects", value: "1 148", label: "проектов реализовано" },
-  { id: "years", value: "12+", label: "лет на рынке безопасности" },
+  { id: "years", value: String(companyFacts.yearsOnMarket), label: "лет на рынке безопасности" },
   { id: "crews", value: "15", label: "бригад монтажа и сервиса" },
   { id: "warranty", value: "3 года", label: "гарантия по договору" },
 ] as const;

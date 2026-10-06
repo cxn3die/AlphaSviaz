@@ -44,6 +44,14 @@
   body {
     @apply bg-background font-sans text-foreground antialiased;
   }
+
+  /* Слова на сайте не переносятся и не рвутся — решение владельца.
+     Не добавлять hyphens-auto и overflow-wrap:anywhere. */
+  html {
+    hyphens: manual;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
 }
 
 @keyframes projects-mosaic-float {
@@ -232,5 +240,49 @@
   100% {
     transform: rotate(-24deg) translate3d(22%, -18%, 0);
     opacity: 0.35;
+  }
+}
+
+/* Фон «доска объектов» на странице-источнике проектов */
+@keyframes mosaic-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Текст «сдано с начала месяца» под счётчиком — медленный серо-белый перелив */
+@keyframes stat-sheen {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.stat-sheen {
+  background-image: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.8) 38%,
+    #ffffff 50%,
+    rgba(255, 255, 255, 0.8) 62%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: stat-sheen 5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-diagonal-rail,
+  .stat-sheen {
+    animation: none;
   }
 }

@@ -9,6 +9,17 @@ export const serviceCoverage = {
   withOffice: "По всей России. Головной офис — Пенза",
 } as const;
 
+/**
+ * Срок работы на рынке. Указан владельцем: 9 лет.
+ * Год начала выводится из него, чтобы «N лет» и «с ... года» не расходились.
+ * На старом сайте acctv.ru было «12 лет, с 2014 года» — владелец решил иначе.
+ */
+const YEARS_ON_MARKET = 9;
+export const companyFacts = {
+  yearsOnMarket: YEARS_ON_MARKET,
+  foundedYear: 2026 - YEARS_ON_MARKET,
+} as const;
+
 export const siteConfig = {
   name: "Альфа-Связь",
   tagline: "Системы безопасности",

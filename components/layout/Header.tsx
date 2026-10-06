@@ -16,8 +16,10 @@ export function Header() {
   const pathname = normalizePath(usePathname());
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  // Внутренние страницы тоже начинаются с тёмного первого экрана, поэтому
+  // шапка везде прозрачная наверху и тёмное стекло при прокрутке — как на главной
   const [headerTheme, setHeaderTheme] = useState<"hero" | "dark" | "default">(
-    "default"
+    "hero"
   );
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export function Header() {
   useEffect(() => {
     const updateTheme = () => {
       if (pathname !== "/") {
-        setHeaderTheme("default");
+        setHeaderTheme(window.scrollY > 50 ? "dark" : "hero");
         return;
       }
 

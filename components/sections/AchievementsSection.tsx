@@ -3,18 +3,22 @@
 import Link from "next/link";
 import CountUp from "react-countup";
 import {
-  AnimatePresence,
   motion,
   useInView,
   useScroll,
   useTransform,
   type Variants,
 } from "framer-motion";
-import { useEffect, useId, useRef, useState, type FocusEvent } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 
-import { ProjectsMonthSummary } from "@/components/stats/ProjectsMonthSummary";
+import { companyFacts } from "@/lib/data/site";
 import { getSourceHref } from "@/lib/data/sources";
-import { PROJECT_COUNTER, formatCount } from "@/lib/projectCounter";
+import {
+  MONTHS_PREPOSITIONAL,
+  PROJECT_COUNTER,
+  formatCount,
+  plural,
+} from "@/lib/projectCounter";
 import { useProjectStats } from "@/lib/useProjectStats";
 import { cn } from "@/lib/utils";
 
@@ -34,11 +38,11 @@ type AchievementCardData = {
 const cards: AchievementCardData[] = [
   {
     id: "years",
-    value: 12,
+    value: companyFacts.yearsOnMarket,
     label: "лет",
     title: "на рынке систем безопасности в России",
     variant: "light",
-    desktopHeight: "lg:h-[520px]",
+    desktopHeight: "lg:min-h-[520px]",
     icon: "shield",
     highlight: "orange",
   },
@@ -48,7 +52,7 @@ const cards: AchievementCardData[] = [
     label: "проектов",
     title: "реализовано на коммерческих и промышленных объектах",
     variant: "blue",
-    desktopHeight: "lg:h-[620px]",
+    desktopHeight: "lg:min-h-[620px]",
     desktopOffset: "lg:mt-16",
     icon: "camera",
     highlight: "white",
@@ -60,7 +64,7 @@ const cards: AchievementCardData[] = [
     label: "объектов",
     title: "сданы в срок и работают без сбоев",
     variant: "blue",
-    desktopHeight: "lg:h-[540px]",
+    desktopHeight: "lg:min-h-[540px]",
     desktopOffset: "lg:-mt-8",
     icon: "access",
     highlight: "white",
@@ -72,7 +76,7 @@ const cards: AchievementCardData[] = [
     label: "клиентов",
     title: "доверяют нам безопасность своих объектов",
     variant: "light",
-    desktopHeight: "lg:h-[480px]",
+    desktopHeight: "lg:min-h-[480px]",
     desktopOffset: "lg:mt-8",
     icon: "shield",
     highlight: "orange",
@@ -83,92 +87,79 @@ const valueClassName =
   "whitespace-nowrap leading-none font-bold tracking-[-0.03em] text-[clamp(64px,22vw,120px)] md:text-[150px] lg:text-[200px]";
 
 /**
- * Число проектов на главной. При наведении (на телефоне — по нажатию,
- * с клавиатуры — по фокусу) показывает небольшую сводку за месяц.
+ * На устройствах без наведения (телефон, планшет) — true, когда середина
+ * экрана дошла до карточки. Срабатывает один раз.
  */
-function ProjectsValue({ inView, className }: { inView: boolean; className: string }) {
-  const stats = useProjectStats();
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const pointerTypeRef = useRef<string>("mouse");
-  const summaryId = useId();
-  const total = stats?.total ?? PROJECT_COUNTER.baseTotal;
+function useRevealAtCenter(ref: RefObject<HTMLElement>, enabled: boolean) {
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    const onPointerDown = (event: PointerEvent) => {
-      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
-    };
-  }, [open]);
+    const node = ref.current;
+    if (!enabled || !node || !window.matchMedia("(hover: none)").matches) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true);
+          observer.disconnect();
+        }
+      },
+      // Узкая полоса посередине экрана
+      { rootMargin: "-45% 0px -45% 0px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [ref, enabled]);
 
-  const onFocus = (event: FocusEvent<HTMLButtonElement>) => {
-    // Открываем только при фокусе с клавиатуры: касание тоже даёт фокус,
-    // и без проверки тап сначала открывал бы сводку, а click сразу закрывал
-    if (event.currentTarget.matches(":focus-visible")) setOpen(true);
-  };
+  return revealed;
+}
+
+const PROJECT_FORMS = ["проект", "проекта", "проектов"] as const;
+
+/**
+ * Число проектов на главной и строки за месяц под ним.
+ *
+ * Десктоп: наведение на синюю карточку показывает «N проектов сдано
+ * с начала месяца» (тем же шрифтом, медленный серо-белый перелив),
+ * наведение на эту строку — ещё «в среднем 10 в месяц».
+ * Телефон: обе строки появляются сами, когда карточка доходит
+ * до середины экрана (data-revealed на карточке). Нажимать ничего не нужно.
+ */
+function ProjectsStat({ inView, className }: { inView: boolean; className: string }) {
+  const stats = useProjectStats();
+  const total = stats?.total ?? PROJECT_COUNTER.baseTotal;
+
+  let monthLine = "";
+  if (stats) {
+    const { currentMonth, previousMonth } = stats;
+    monthLine =
+      currentMonth.count > 0
+        ? `${currentMonth.count} ${plural(currentMonth.count, PROJECT_FORMS)} сдано с начала месяца`
+        : `${previousMonth.count} ${plural(previousMonth.count, PROJECT_FORMS)} сдано в ${MONTHS_PREPOSITIONAL[previousMonth.month - 1]}`;
+  }
+
+  const reveal =
+    "opacity-0 translate-y-1 transition-[opacity,transform] duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-data-[revealed=true]:translate-y-0 group-data-[revealed=true]:opacity-100";
 
   return (
-    <div
-      ref={wrapperRef}
-      className="relative mt-2 inline-block"
-      // Pointer, а не mouse-события: после тапа браузер шлёт ещё и
-      // эмулированный mouseenter, и сводка открывалась и тут же закрывалась
-      onPointerEnter={(event) => {
-        if (event.pointerType === "mouse") setOpen(true);
-      }}
-      onPointerLeave={(event) => {
-        if (event.pointerType === "mouse") setOpen(false);
-      }}
-    >
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls={summaryId}
-        aria-label={`${formatCount(total)} проектов. Сводка за месяц`}
-        onPointerDown={(event) => {
-          pointerTypeRef.current = event.pointerType;
-        }}
-        onClick={() => {
-          if (pointerTypeRef.current !== "mouse") setOpen((value) => !value);
-        }}
-        onFocus={onFocus}
-        onBlur={() => setOpen(false)}
-        className={cn(
-          "cursor-default rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent",
-          className
-        )}
-      >
-        {inView && stats ? (
-          <CountUp end={total} duration={2} separator="" />
-        ) : (
-          0
-        )}
-      </button>
+    <div className="mt-2">
+      <p className={className} aria-label={`${formatCount(total)} проектов`}>
+        {inView && stats ? <CountUp end={total} duration={2} separator="" /> : 0}
+      </p>
 
-      <AnimatePresence>
-        {open && stats && (
-          <motion.div
-            id={summaryId}
-            role="status"
-            initial={{ opacity: 0, y: 6, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 4, scale: 0.98 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="absolute left-0 top-full z-30 mt-3 w-[272px] max-w-[calc(100vw-6rem)] origin-top-left rounded-2xl border border-white/10 bg-[#071A2F]/95 p-4 shadow-[0_18px_50px_rgba(7,26,47,0.45)] backdrop-blur-md"
-          >
-            <ProjectsMonthSummary stats={stats} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Место под строки зарезервировано: при появлении карточка не прыгает */}
+      <div className="group/month mt-3 min-h-[3.75rem] md:mt-4 md:min-h-[4.25rem] lg:min-h-[5rem]">
+        <p className={cn("text-[18px] font-bold leading-tight tracking-[-0.01em] md:text-[22px] lg:text-[30px]", reveal)}>
+          <span className="stat-sheen">{monthLine || "\u00A0"}</span>
+        </p>
+        <p
+          className={cn(
+            "mt-1 text-[14px] font-semibold text-white/70 md:text-[16px] lg:mt-1.5 lg:text-[20px]",
+            "opacity-0 transition-opacity duration-500 ease-out group-hover/month:opacity-100 group-data-[revealed=true]:opacity-100"
+          )}
+        >
+          {stats ? `в среднем ${stats.averagePerMonth} в месяц` : "\u00A0"}
+        </p>
+      </div>
     </div>
   );
 }
@@ -236,6 +227,7 @@ function AchievementCard({
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
+  const revealed = useRevealAtCenter(ref, card.id === "projects");
   const isBlue = card.variant === "blue";
   const isOrangeHighlight = card.highlight === "orange";
 
@@ -251,6 +243,7 @@ function AchievementCard({
   return (
     <motion.article
       ref={ref}
+      data-revealed={revealed}
       variants={itemVariants}
       whileHover={{ scale: 1.02, y: -2 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
@@ -258,7 +251,9 @@ function AchievementCard({
         // Без overflow-hidden: сводка у счётчика может выходить за край
         // карточки. z-30 при наведении/фокусе — чтобы она легла поверх соседней
         "group relative rounded-[24px] p-8 hover:z-30 focus-within:z-30 md:p-10 lg:p-14",
-        "h-[360px] md:h-[440px]",
+        // min-h, а не h: высота растёт под текст. С жёсткой высотой подпись
+        // вылезала за карточку (у «Клиентов» на 1024, у «Проектов» везде)
+        "flex flex-col self-start min-h-[360px] md:min-h-[440px]",
         isBlue
           ? "bg-[#1E88E5] text-white hover:bg-[#1976D2] hover:shadow-[0_24px_60px_rgba(7,26,47,0.2)]"
           : darkMode
@@ -283,7 +278,7 @@ function AchievementCard({
         источник
       </Link>
 
-      <div className="relative z-10 flex h-full flex-col justify-between">
+      <div className="relative z-10 flex flex-1 flex-col justify-between">
         <div>
           <p
             className={cn(
@@ -306,7 +301,7 @@ function AchievementCard({
             )}
           </p>
           {card.id === "projects" ? (
-            <ProjectsValue inView={inView} className={cn(valueClassName, valueColor)} />
+            <ProjectsStat inView={inView} className={cn(valueClassName, valueColor)} />
           ) : (
             <p className={cn("mt-2", valueClassName, valueColor)}>
               {inView ? <CountUp end={card.value} duration={2} separator="" /> : 0}
@@ -376,7 +371,7 @@ export function AchievementsSection() {
             Нам доверяют безопасность
           </h2>
           <p className="mt-6 text-[18px] text-white/70 md:text-[20px]">
-            За 12 лет работы мы реализовали более тысячи проектов по всей России.
+            За {companyFacts.yearsOnMarket} лет работы мы реализовали более тысячи проектов по всей России.
           </p>
         </div>
 

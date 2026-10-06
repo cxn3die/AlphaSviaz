@@ -17,7 +17,7 @@ type SourceHeroProps = {
 export function SourceHero({ title, lead, value, suffix, caption }: SourceHeroProps) {
   return (
     <section
-      className="relative overflow-hidden text-white"
+      className="relative -mt-20 pt-20 overflow-hidden text-white"
       style={{ backgroundColor: BRAND_NAVY_HERO }}
     >
       <div

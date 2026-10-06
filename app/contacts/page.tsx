@@ -11,10 +11,11 @@ export const metadata = {
 
 export default function ContactsPage() {
   return (
-    <div className="relative overflow-hidden bg-[#0C2340]">
+    <div className="relative -mt-20 pt-20 overflow-hidden bg-[#0C2340]">
       <BrandDiagonalWatermark />
       <div className="relative z-10">
         <PageHero
+          underHeader={false}
           title="Контакты"
           description={`Свяжитесь с ${siteConfig.name} — ответим на вопросы и рассчитаем проект.`}
           breadcrumbs={[

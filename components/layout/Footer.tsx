@@ -62,7 +62,7 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <Logo variant="dark" />
-            <p className="mt-5 text-sm leading-relaxed text-white/80 [overflow-wrap:anywhere] hyphens-auto">
+            <p className="mt-5 text-sm leading-relaxed text-white/80">
               {siteConfig.description}. Входит в группу компаний «Поволжье Строй
               Сервис».
             </p>
