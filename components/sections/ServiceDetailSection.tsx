@@ -119,7 +119,7 @@ export function ServiceDetailSection({ data }: ServiceDetailSectionProps) {
                   <p className="font-heading text-xl font-bold text-white md:text-2xl">
                     Гарантия до 3 лет на оборудование и монтаж
                   </p>
-                  <p className="mt-1 text-white/60">Фиксируем в договоре. Расчёт — бесплатно.</p>
+                  <p className="mt-1 text-white/60">Фиксируем в договоре. Расчёт делаем до подписания договора.</p>
                 </div>
               </div>
               <div className="flex shrink-0 flex-col gap-3 sm:flex-row">

@@ -27,10 +27,12 @@ export function ServiceProjectFlowSection() {
     <section className="border-t border-white/8 bg-[#0E2542] py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#64B5F6]">
-            {eyebrow}
-          </p>
-          <h2 className="mt-3 font-heading text-2xl font-bold text-white md:text-3xl">
+          {eyebrow && (
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#64B5F6]">
+              {eyebrow}
+            </p>
+          )}
+          <h2 className=" font-heading text-2xl font-bold text-white md:text-3xl">
             {title}
           </h2>
           <p className="mt-4 text-base text-white/60 md:text-lg">{subtitle}</p>

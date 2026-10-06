@@ -86,10 +86,10 @@ export function ClientsMarqueeSection() {
             id="clients-heading"
             className="mt-3 font-heading text-[clamp(1.75rem,5vw,2.75rem)] font-bold leading-tight text-white"
           >
-            Нам доверяют лидеры отраслей
+            Наши заказчики
           </h2>
           <p className="mt-4 text-base text-white/65 md:text-lg">
-            Промышленные и корпоративные заказчики по всей России
+            Производители, торговые сети, агрохолдинги и государственные учреждения
           </p>
         </div>
       </div>

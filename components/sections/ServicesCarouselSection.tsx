@@ -23,7 +23,7 @@ const services: ServiceSlide[] = [
   {
     slug: "video-surveillance",
     title: "ВИДЕОНАБЛЮДЕНИЕ",
-    subtitle: "Профессиональный монтаж «под ключ»",
+    subtitle: "Подбираем камеры, монтируем, настраиваем архив и удалённый доступ",
     gradient: "linear-gradient(135deg, #071A2F 0%, #1E88E5 50%, #F25C1F 100%)",
     image: "/images/services/videonablyudenie.webp",
     imageAlt: "Уличные IP-камеры видеонаблюдения на опоре",
@@ -97,7 +97,7 @@ export function ServicesCarouselSection() {
           id="services-heading"
           className="mt-3 font-heading text-[clamp(1.75rem,5vw,2.75rem)] font-bold leading-tight text-white"
         >
-          Комплексные решения под ключ
+          Чем мы занимаемся
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-base text-white/65 md:text-lg">
           Видеонаблюдение, СКС, СКУД и пожарная безопасность для бизнеса
