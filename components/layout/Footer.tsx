@@ -7,7 +7,7 @@ import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { BRAND_NAVY_LIFTED } from "@/lib/brand-colors";
 import { siteConfig } from "@/lib/data/site";
-import { companyNav, services } from "@/lib/navigation";
+import { companyNav, normalizePath, services } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 const socialLinks = [
@@ -40,8 +40,16 @@ function VkIcon() {
   );
 }
 
+/**
+ * Реквизиты выводим только настоящие. Пока в site.ts стоят заглушки
+ * с «X», строка в подвале скрыта — иначе посетитель видит «5836XXXXXX».
+ */
+const hasLegalIds = [siteConfig.legal.inn, siteConfig.legal.ogrn].every(
+  (value) => /^\d+$/.test(value)
+);
+
 export function Footer() {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
   const currentYear = new Date().getFullYear();
   const isHome = pathname === "/";
 
@@ -145,9 +153,11 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-[rgba(242,92,31,0.3)] pt-8 text-xs text-white/60 md:flex-row md:items-center md:justify-between">
           <p>© {currentYear} ООО «Альфа-Связь». Все права защищены.</p>
-          <p>
-            ИНН: {siteConfig.legal.inn} • ОГРН: {siteConfig.legal.ogrn}
-          </p>
+          {hasLegalIds && (
+            <p>
+              ИНН: {siteConfig.legal.inn} • ОГРН: {siteConfig.legal.ogrn}
+            </p>
+          )}
         </div>
       </div>
     </footer>

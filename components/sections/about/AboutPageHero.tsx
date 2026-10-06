@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 
 import { BlueprintPattern } from "@/components/decorative/BlueprintPattern";
+import { LiveProjectsTotal } from "@/components/stats/LiveProjectsTotal";
 import { aboutPageCopy, companyInfo } from "@/lib/data/company";
 
 export function AboutPageHero() {
@@ -70,7 +71,7 @@ export function AboutPageHero() {
               className="rounded-xl border border-white/10 bg-white/[0.05] px-4 py-4 backdrop-blur-sm md:py-5"
             >
               <p className="font-heading text-2xl font-bold text-[#64B5F6] md:text-3xl">
-                {stat.value}
+                {stat.id === "projects" ? <LiveProjectsTotal /> : stat.value}
               </p>
               <p className="mt-1 text-xs text-white/55 md:text-sm">{stat.label}</p>
             </li>

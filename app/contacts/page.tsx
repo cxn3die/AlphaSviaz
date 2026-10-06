@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function ContactsPage() {
   return (
-    <main className="relative overflow-hidden bg-[#0C2340]">
+    <div className="relative overflow-hidden bg-[#0C2340]">
       <BrandDiagonalWatermark />
       <div className="relative z-10">
         <PageHero
@@ -24,6 +24,6 @@ export default function ContactsPage() {
         />
         <ContactsSection />
       </div>
-    </main>
+    </div>
   );
 }

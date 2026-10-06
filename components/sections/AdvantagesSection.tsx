@@ -62,7 +62,7 @@ function AdvantageCard({ item }: { item: AdvantageItem }) {
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 40vw"
             style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
-            className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.06]"
+            className="object-cover transition-transform [transition-duration:900ms] group-hover:scale-[1.06]"
           />
           {/* Прозрачно сверху — фото видно; плотно снизу — текст читается */}
           <div

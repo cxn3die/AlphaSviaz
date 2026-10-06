@@ -83,7 +83,7 @@ export function AboutServicesHub() {
                       alt={image.alt}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
-                      className="object-cover transition-transform duration-[900ms] group-hover:scale-105"
+                      className="object-cover transition-transform [transition-duration:900ms] group-hover:scale-105"
                     />
                   )}
                   <div

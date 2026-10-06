@@ -10,10 +10,10 @@ export const metadata = {
 
 export default function ProjectsPage() {
   return (
-    <main className="bg-[#0C2340]">
+    <div className="bg-[#0C2340]">
       <ProjectsPageHero />
       <ProjectsExperience />
       <PageCtaSection />
-    </main>
+    </div>
   );
 }

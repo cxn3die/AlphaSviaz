@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
 import { HeaderBrand } from "@/components/layout/HeaderBrand";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { siteConfig } from "@/lib/data/site";
-import { mainNav, services } from "@/lib/navigation";
+import { REQUEST_HREF, mainNav, normalizePath, services } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 export function Header() {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [headerTheme, setHeaderTheme] = useState<"hero" | "dark" | "default">(
@@ -87,10 +87,15 @@ export function Header() {
           : "border-b border-transparent bg-transparent"
       )}
     >
-      <div className="container mx-auto flex h-full items-center justify-between">
+      {/*
+        Ширины подобраны под реальные размеры: до 1024px — бургер-меню,
+        1024–1279 — телефон иконкой, с 1280 — номер и часы работы.
+        Раньше на 768–1279 номер и кнопка заявки уезжали за край экрана.
+      */}
+      <div className="container mx-auto flex h-full items-center justify-between gap-4 lg:px-8 xl:px-10">
         <HeaderBrand inverted={isInverted} />
 
-        <nav className="hidden flex-1 justify-center px-8 md:flex lg:px-10" aria-label="Главное меню">
+        <nav className="hidden flex-1 justify-center px-2 lg:flex xl:px-4" aria-label="Главное меню">
           <ul className="flex items-center gap-1">
             {mainNav.map((item) => {
               if (item.label !== "Услуги") {
@@ -100,7 +105,7 @@ export function Header() {
                     <Link
                       href={item.href}
                       className={cn(
-                        "inline-flex h-[52px] items-center justify-center whitespace-nowrap rounded-[8px] px-6 text-[16px] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2",
+                        "inline-flex h-[52px] items-center justify-center whitespace-nowrap rounded-[8px] px-3.5 text-[16px] xl:px-4 font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2",
                         isActive
                           ? "bg-[#1E88E5] text-white"
                           : isDarkTheme
@@ -122,7 +127,7 @@ export function Header() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "inline-flex h-[52px] items-center justify-center gap-1 whitespace-nowrap rounded-[8px] px-6 text-[16px] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2",
+                      "inline-flex h-[52px] items-center justify-center gap-1 whitespace-nowrap rounded-[8px] px-3.5 text-[16px] xl:px-4 font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2",
                       servicesActive
                         ? "bg-[#1E88E5] text-white"
                         : isDarkTheme
@@ -155,7 +160,7 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden shrink-0 items-center gap-3 lg:flex xl:gap-4">
           <a
             href={siteConfig.contacts.phoneLink}
             className={cn(
@@ -172,18 +177,18 @@ export function Header() {
             >
               <Phone className={cn("size-5", isInverted ? "text-white" : "text-[#1E88E5]")} />
             </span>
-            <span className="leading-tight">
+            <span className="hidden leading-tight xl:block">
               <span
                 className={cn(
-                  "hidden whitespace-nowrap text-[12px] lg:block",
+                  "block whitespace-nowrap text-[12px]",
                   isInverted ? "text-white/70" : "text-[#475467]"
                 )}
               >
-                Звонок бесплатный
+                {siteConfig.contacts.workingHours}
               </span>
               <span
                 className={cn(
-                  "block whitespace-nowrap text-[16px] font-bold lg:text-[17px]",
+                  "block whitespace-nowrap text-[17px] font-bold",
                   isInverted ? "text-white" : "text-[#101828]"
                 )}
               >
@@ -192,14 +197,13 @@ export function Header() {
             </span>
           </a>
 
-          <button
-            type="button"
-            className="inline-flex h-[52px] items-center justify-center gap-2 whitespace-nowrap rounded-[8px] bg-[#1E88E5] px-6 text-[15px] font-semibold text-white transition hover:bg-[#42A5F5] hover:shadow-[0_0_0_4px_rgba(30,136,229,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2"
-            aria-label="Оставить заявку"
+          <Link
+            href={REQUEST_HREF}
+            className="inline-flex h-[52px] items-center justify-center gap-2 whitespace-nowrap rounded-[8px] bg-[#1E88E5] px-5 text-[15px] xl:px-6 font-semibold text-white transition hover:bg-[#42A5F5] hover:shadow-[0_0_0_4px_rgba(30,136,229,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2"
           >
             Оставить заявку
             <ArrowRight className="size-4" />
-          </button>
+          </Link>
         </div>
 
         <MobileMenu inverted={isInverted} />

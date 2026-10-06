@@ -28,11 +28,12 @@ export const aboutPageCopy = {
     hubTitle: "Оборудование",
     hubBadge: "Альфа-Связь",
   },
+  /** id: "projects" — значение подставляется живым счётчиком */
   stats: [
-    { value: "12+", label: "лет на рынке безопасности" },
-    { value: "1 148", label: "проектов реализовано" },
-    { value: "15", label: "бригад монтажа и сервиса" },
-    { value: "3 года", label: "гарантия на работы" },
+    { id: "years", value: "12+", label: "лет на рынке безопасности" },
+    { id: "projects", value: "1 148", label: "проектов реализовано" },
+    { id: "crews", value: "15", label: "бригад монтажа и сервиса" },
+    { id: "warranty", value: "3 года", label: "гарантия на работы" },
   ],
   ecosystem: {
     title: "Карта экосистемы",

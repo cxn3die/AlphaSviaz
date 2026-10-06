@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, Check } from "lucide-react";
 
 import type { ServicePageData } from "@/lib/data/servicePages";
-import { services } from "@/lib/navigation";
+import { REQUEST_HREF, services } from "@/lib/navigation";
 import { PageHero } from "@/components/sections/PageHero";
 import { PageCtaSection } from "@/components/sections/PageCtaSection";
 import { ServiceProjectFlowSection } from "@/components/sections/services/ServiceProjectFlowSection";
@@ -19,7 +19,7 @@ export function ServiceDetailSection({ data }: ServiceDetailSectionProps) {
   );
 
   return (
-    <main className="bg-[#0C2340]">
+    <div className="bg-[#0C2340]">
       <PageHero
         title={data.title}
         description={data.subtitle}
@@ -109,12 +109,12 @@ export function ServiceDetailSection({ data }: ServiceDetailSectionProps) {
               <p className="mt-2 font-heading text-lg font-bold text-white">
                 До 3 лет на оборудование и монтаж
               </p>
-              <button
-                type="button"
-                className="mt-6 w-full rounded-[8px] bg-[#1E88E5] px-6 py-3.5 text-[15px] font-semibold text-white transition hover:bg-[#42A5F5]"
+              <Link
+                href={REQUEST_HREF}
+                className="mt-6 block w-full rounded-[8px] bg-[#1E88E5] px-6 py-3.5 text-center text-[15px] font-semibold text-white transition hover:bg-[#42A5F5]"
               >
                 Заказать расчёт
-              </button>
+              </Link>
               <Link
                 href="/services"
                 className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-white/55 transition hover:text-[#64B5F6]"
@@ -154,6 +154,6 @@ export function ServiceDetailSection({ data }: ServiceDetailSectionProps) {
       )}
 
       <PageCtaSection />
-    </main>
+    </div>
   );
 }

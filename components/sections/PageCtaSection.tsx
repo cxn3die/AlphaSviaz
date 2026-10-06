@@ -3,6 +3,7 @@ import { ArrowRight, Phone } from "lucide-react";
 
 import { BRAND_NAVY_LIFTED } from "@/lib/brand-colors";
 import { siteConfig, serviceCoverage } from "@/lib/data/site";
+import { REQUEST_HREF } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 type PageCtaSectionProps = {
@@ -47,13 +48,13 @@ export function PageCtaSection({ variant = "default" }: PageCtaSectionProps) {
 
           {/* shrink-0 + nowrap: иначе на средней ширине телефон рвётся пополам */}
           <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
-            <button
-              type="button"
+            <Link
+              href={REQUEST_HREF}
               className="inline-flex h-12 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-[8px] bg-[#1E88E5] px-7 text-[15px] font-semibold text-white transition hover:bg-[#42A5F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2"
             >
               Оставить заявку
               <ArrowRight className="size-4" />
-            </button>
+            </Link>
             <a
               href={siteConfig.contacts.phoneLink}
               className={cn(

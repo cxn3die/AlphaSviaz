@@ -15,6 +15,18 @@ export type FooterLink = {
   href: string;
 };
 
+/** Куда ведут все кнопки «Оставить заявку» — форма на странице контактов */
+export const REQUEST_HREF = "/contacts/#request";
+
+/**
+ * С trailingSlash: true usePathname отдаёт «/projects/», а ссылки в меню
+ * записаны как «/projects». Сравнивать пути только через эту функцию.
+ */
+export function normalizePath(pathname: string | null | undefined) {
+  if (!pathname) return "/";
+  return pathname.replace(/\/+$/, "") || "/";
+}
+
 export const services: ServiceLink[] = [
   {
     label: "Видеонаблюдение",
