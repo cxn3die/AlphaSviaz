@@ -160,7 +160,7 @@ export function ServicesCarouselSection() {
                 раньше с 1280px оно рвалось на «ВИДЕОНАБЛЮДЕ / НИЕ».
               */}
               <div className="absolute bottom-[88px] left-4 right-4 z-[3] max-w-[720px] sm:bottom-[100px] sm:left-6 sm:right-6 md:bottom-20 md:left-[60px] md:right-auto">
-                <h2 className="font-heading text-[clamp(1.375rem,6.2vw,2.25rem)] font-bold leading-[1.08] tracking-[-0.02em] text-white [overflow-wrap:break-word] [text-wrap:balance] sm:text-[clamp(1.75rem,4.5vw,3rem)] md:text-[clamp(2.25rem,4.2vw,3.75rem)]">
+                <h2 className="font-heading text-[clamp(1.375rem,6.2vw,2.25rem)] font-bold leading-[1.08] tracking-[-0.02em] text-white [text-wrap:balance] sm:text-[clamp(1.75rem,4.5vw,3rem)] md:text-[clamp(2.25rem,4.2vw,3.75rem)]">
                   {activeSlide.title}
                 </h2>
                 <p className="mt-3 max-w-[480px] text-base leading-relaxed text-white/85 sm:mt-4 sm:text-lg md:text-[20px]">

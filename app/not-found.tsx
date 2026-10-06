@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div
-      className="relative flex min-h-[calc(100vh-5rem)] items-center overflow-hidden text-white"
+      className="relative -mt-20 pt-20 flex min-h-screen items-center overflow-hidden text-white"
       style={{ backgroundColor: BRAND_NAVY_HERO }}
     >
       <div

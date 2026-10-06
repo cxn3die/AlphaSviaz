@@ -15,6 +15,11 @@ type PageHeroProps = {
   breadcrumbs?: BreadcrumbItem[];
   variant?: "light" | "brand";
   className?: string;
+  /**
+   * Фон заходит под прозрачную шапку (-mt-20 pt-20). false — если это
+   * уже сделала обёртка страницы (контакты).
+   */
+  underHeader?: boolean;
 };
 
 export function PageHero({
@@ -23,6 +28,7 @@ export function PageHero({
   breadcrumbs,
   variant = "brand",
   className,
+  underHeader = true,
 }: PageHeroProps) {
   const isBrand = variant === "brand";
 
@@ -30,6 +36,7 @@ export function PageHero({
     <section
       className={cn(
         "relative overflow-hidden",
+        underHeader && "-mt-20 pt-20",
         isBrand ? "text-white" : "border-b border-[#E5E9F0] bg-[#F5F7FA]",
         className
       )}
@@ -89,7 +96,7 @@ export function PageHero({
 
         <h1
           className={cn(
-            "max-w-3xl font-heading text-[clamp(1.75rem,7vw,3rem)] font-bold leading-tight [overflow-wrap:anywhere] hyphens-auto",
+            "max-w-3xl font-heading text-[clamp(1.75rem,7vw,3rem)] font-bold leading-tight",
             isBrand ? "text-white" : "text-[#101828]"
           )}
         >

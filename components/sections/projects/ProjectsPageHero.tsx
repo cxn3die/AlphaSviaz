@@ -11,7 +11,7 @@ export function ProjectsPageHero() {
   const { hero } = projectsPageCopy;
 
   return (
-    <section className="relative overflow-hidden bg-[#102A4A] text-white">
+    <section className="relative -mt-20 pt-20 overflow-hidden bg-[#102A4A] text-white">
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_80%_at_70%_-20%,rgba(66,165,245,0.35),transparent_50%)]"
         aria-hidden

@@ -1,4 +1,4 @@
-import { serviceCoverage } from "@/lib/data/site";
+import { companyFacts, serviceCoverage } from "@/lib/data/site";
 
 export const companyInfo = {
   brand: "Альфа-Связь",
@@ -24,13 +24,13 @@ export const aboutPageCopy = {
     eyebrow: "О компании",
     title: "Проектируем, монтируем и обслуживаем — своими силами",
     description:
-      "«Альфа-Связь» с 2014 года строит системы безопасности на коммерческих и промышленных объектах. Собственный отдел проектирования, склад оборудования, 15 монтажных бригад и автопарк — подряд на стороне не берём.",
+      `«Альфа-Связь» с ${companyFacts.foundedYear} года строит системы безопасности на коммерческих и промышленных объектах. Собственный отдел проектирования, склад оборудования, 15 монтажных бригад и автопарк — подряд на стороне не берём.`,
     hubTitle: "Оборудование",
     hubBadge: "Альфа-Связь",
   },
   /** id: "projects" — значение подставляется живым счётчиком */
   stats: [
-    { id: "years", value: "12+", label: "лет на рынке безопасности" },
+    { id: "years", value: String(companyFacts.yearsOnMarket), label: "лет на рынке безопасности" },
     { id: "projects", value: "1 148", label: "проектов реализовано" },
     { id: "crews", value: "15", label: "бригад монтажа и сервиса" },
     { id: "warranty", value: "3 года", label: "гарантия на работы" },

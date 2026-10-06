@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import type { ReactNode } from "react";
 
+import { LogoDriftBackdrop } from "@/components/decorative/LogoDriftBackdrop";
+import { ProjectMosaicBackdrop } from "@/components/decorative/ProjectMosaicBackdrop";
 import { PageCtaSection } from "@/components/sections/PageCtaSection";
-import { ProjectsLivePanel } from "@/components/sections/sources/ProjectsLivePanel";
 import { SourceHero } from "@/components/sections/sources/SourceHero";
 import { LiveProjectsTotal } from "@/components/stats/LiveProjectsTotal";
 import { AppImage as Image } from "@/components/ui/app-image";
@@ -12,45 +14,104 @@ import { getProjectIndustries, projects } from "@/lib/data/projects";
 import { sources, type SourceEntry } from "@/lib/data/sources";
 import { cn } from "@/lib/utils";
 
-function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
+function SectionHeading({ eyebrow, title }: { eyebrow?: string; title: string }) {
   return (
     <div className="max-w-2xl">
-      <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#64B5F6]">{eyebrow}</p>
-      <h2 className="mt-3 font-heading text-2xl font-bold text-white md:text-3xl">{title}</h2>
+      {eyebrow && (
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.12em] text-[#64B5F6]">
+          {eyebrow}
+        </p>
+      )}
+      <h2 className="font-heading text-2xl font-bold text-white md:text-3xl">{title}</h2>
     </div>
   );
 }
 
-function ProjectsExtra() {
-  const featured = projects.filter((project) => project.featured);
+/** «Как считаем»: один пункт — абзацем, несколько — карточками */
+function MethodSection({ method }: { method: SourceEntry["method"] }) {
+  const single = method.length === 1;
 
   return (
-    <section className="border-t border-white/8 bg-[#0E2542] py-16 md:py-20">
+    <section className="py-16 md:py-20">
       <div className="container mx-auto px-4">
-        <SectionHeading eyebrow="По месяцам" title="Сколько объектов сдаём" />
-        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-          <ProjectsLivePanel />
-          <div className="rounded-[20px] border border-white/10 bg-white/[0.04] p-6 md:p-8">
-            <p className="text-sm font-semibold text-white">Примеры сданных объектов</p>
-            <ul className="mt-5 space-y-4">
-              {featured.map((project) => (
-                <li key={project.id} className="border-b border-white/8 pb-4 last:border-0 last:pb-0">
-                  <p className="font-heading text-lg font-bold text-white">{project.title}</p>
-                  <p className="mt-1 text-sm text-white/55">
-                    {project.industry} · {project.category}
-                  </p>
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/projects"
-              className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-[#64B5F6] transition hover:text-white"
-            >
-              Все кейсы с описанием
-              <ArrowUpRight className="size-4" aria-hidden />
-            </Link>
-          </div>
+        <SectionHeading title="Как считаем" />
+        {single ? (
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/75 md:text-xl">
+            {method[0].text}
+          </p>
+        ) : (
+          <ol className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+            {method.map((item, index) => (
+              <li
+                key={item.title ?? index}
+                className="flex gap-4 rounded-[16px] border border-white/10 bg-white/[0.04] p-5 md:p-6"
+              >
+                <span className="font-heading text-2xl font-bold leading-none text-[#64B5F6] tabular-nums">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  {item.title && (
+                    <h3 className="font-heading text-lg font-bold text-white">{item.title}</h3>
+                  )}
+                  <p className="mt-1.5 text-[15px] leading-relaxed text-white/65">{item.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** Примеры сданных объектов — фото кейсов, без графиков */
+function ProjectsExtra() {
+  const featured = projects.filter((project) => project.featured).slice(0, 3);
+
+  return (
+    <section className="relative py-16 md:py-20">
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <SectionHeading title="Примеры сданных объектов" />
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#64B5F6] transition hover:text-white"
+          >
+            Все кейсы с описанием
+            <ArrowUpRight className="size-4" aria-hidden />
+          </Link>
         </div>
+
+        <ul className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {featured.map((project) => (
+            <li key={project.id}>
+              <Link
+                href="/projects"
+                className="group block overflow-hidden rounded-[18px] border border-white/10 bg-[#0C2340]/80 backdrop-blur-sm transition hover:border-[#42A5F5]/40"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  {project.image && (
+                    <Image
+                      src={project.image}
+                      alt={project.imageAlt ?? project.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transition-transform [transition-duration:900ms] group-hover:scale-105"
+                    />
+                  )}
+                  <div
+                    className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(12,35,64,0.85)_100%)]"
+                    aria-hidden
+                  />
+                </div>
+                <div className="p-5">
+                  <p className="font-heading text-lg font-bold text-white">{project.title}</p>
+                  <p className="mt-1 text-sm text-white/55">{project.industry}</p>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
@@ -125,7 +186,7 @@ function ClientsExtra() {
                 alt={client.name}
                 width={client.wide ? 200 : 140}
                 height={48}
-                // multiply на тёмной плитке гасит логотип в чёрное — здесь он не нужен
+                // multiply на тёмной плитке гаснет в чёрное — здесь он не нужен
                 className={cn(getClientLogoClassName(client.id, client.wide), "mix-blend-normal")}
               />
             </li>
@@ -136,15 +197,72 @@ function ClientsExtra() {
   );
 }
 
+function OtherSources({ current }: { current: SourceEntry["slug"] }) {
+  const others = sources.filter((item) => item.slug !== current);
+
+  return (
+    <section className="relative py-14 md:py-16">
+      <div className="container relative z-10 mx-auto px-4">
+        <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/50">
+          Другие цифры
+        </p>
+        <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {others.map((item) => (
+            <li key={item.slug}>
+              <Link
+                href={`/sources/${item.slug}`}
+                className={cn(
+                  "group flex h-full flex-col rounded-[18px] border border-white/10 bg-[#0C2340]/70 p-5 backdrop-blur-sm transition",
+                  "hover:border-[#42A5F5]/40 hover:bg-[#12304F]/80"
+                )}
+              >
+                <span className="font-heading text-3xl font-bold text-[#64B5F6] tabular-nums">
+                  {item.slug === "projects" ? <LiveProjectsTotal /> : item.value}
+                  {item.suffix}
+                </span>
+                <span className="mt-2 text-sm text-white/65">{item.caption}</span>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-white/80 transition group-hover:text-white">
+                  Источник
+                  <ArrowUpRight className="size-4" aria-hidden />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Необычные фоны — по решению владельца только на двух страницах:
+ * годы — плывущие ленты из логотипа, проекты — «доска объектов».
+ * Остальные страницы без фона.
+ */
+const backdrops: Partial<Record<SourceEntry["slug"], () => JSX.Element>> = {
+  years: () => <LogoDriftBackdrop />,
+  projects: () => <ProjectMosaicBackdrop />,
+};
+
 const extras: Partial<Record<SourceEntry["slug"], () => JSX.Element>> = {
   projects: ProjectsExtra,
   "on-time": OnTimeExtra,
   clients: ClientsExtra,
 };
 
+function WithBackdrop({ slug, children }: { slug: SourceEntry["slug"]; children: ReactNode }) {
+  const Backdrop = backdrops[slug];
+  if (!Backdrop) return <>{children}</>;
+  return (
+    <div className="relative overflow-hidden border-t border-white/8">
+      <Backdrop />
+      <div className="relative">{children}</div>
+    </div>
+  );
+}
+
 export function SourceDetail({ source }: { source: SourceEntry }) {
   const Extra = extras[source.slug];
-  const others = sources.filter((item) => item.slug !== source.slug);
 
   return (
     <div className="bg-[#0C2340]">
@@ -156,93 +274,15 @@ export function SourceDetail({ source }: { source: SourceEntry }) {
         caption={source.caption}
       />
 
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
-            <div>
-              <SectionHeading eyebrow="Методика" title="Как считаем" />
-              <ol className="mt-8 space-y-4">
-                {source.method.map((item, index) => (
-                  <li
-                    key={item.title}
-                    className="flex gap-4 rounded-[16px] border border-white/10 bg-white/[0.04] p-5 md:p-6"
-                  >
-                    <span className="font-heading text-2xl font-bold leading-none text-[#64B5F6] tabular-nums">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <div>
-                      <h3 className="font-heading text-lg font-bold text-white">{item.title}</h3>
-                      <p className="mt-1.5 text-[15px] leading-relaxed text-white/65">{item.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
+      <MethodSection method={source.method} />
 
-            {source.facts.length > 0 && (
-              <div>
-                <SectionHeading eyebrow="Основание" title="На чём основано" />
-                <dl className="mt-8 divide-y divide-white/8 rounded-[16px] border border-white/10 bg-white/[0.03]">
-                  {source.facts.map((fact) => (
-                    <div
-                      key={fact.label}
-                      className="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 md:px-6"
-                    >
-                      <dt className="text-sm text-white/55">{fact.label}</dt>
-                      <dd className="text-[15px] font-semibold text-white sm:text-right">
-                        {fact.href ? (
-                          <Link
-                            href={fact.href}
-                            className="inline-flex items-center gap-1 text-white transition hover:text-[#64B5F6]"
-                          >
-                            {fact.value}
-                            <ArrowUpRight className="size-3.5 opacity-60" aria-hidden />
-                          </Link>
-                        ) : (
-                          fact.value
-                        )}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            )}
-          </div>
+      {/* У страниц с фоном фон лежит под нижними блоками целиком */}
+      <WithBackdrop slug={source.slug}>
+        {Extra && <Extra />}
+        <div className={cn(!backdrops[source.slug] && "border-t border-white/8")}>
+          <OtherSources current={source.slug} />
         </div>
-      </section>
-
-      {Extra && <Extra />}
-
-      <section className="border-t border-white/8 py-14 md:py-16">
-        <div className="container mx-auto px-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-white/50">
-            Другие цифры
-          </p>
-          <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {others.map((item) => (
-              <li key={item.slug}>
-                <Link
-                  href={`/sources/${item.slug}`}
-                  className={cn(
-                    "group flex h-full flex-col rounded-[18px] border border-white/10 bg-white/[0.04] p-5 transition",
-                    "hover:border-[#42A5F5]/40 hover:bg-white/[0.07]"
-                  )}
-                >
-                  <span className="font-heading text-3xl font-bold text-[#64B5F6] tabular-nums">
-                    {item.slug === "projects" ? <LiveProjectsTotal /> : item.value}
-                    {item.suffix}
-                  </span>
-                  <span className="mt-2 text-sm text-white/65">{item.caption}</span>
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-white/80 transition group-hover:text-white">
-                    Источник
-                    <ArrowUpRight className="size-4" aria-hidden />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      </WithBackdrop>
 
       <PageCtaSection />
     </div>

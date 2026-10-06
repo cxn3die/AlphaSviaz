@@ -3,6 +3,7 @@ import { Inter, Manrope } from "next/font/google";
 
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { companyFacts } from "@/lib/data/site";
 
 import "./globals.css";
 
@@ -21,7 +22,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Альфа-Связь — Системы безопасности по всей России",
   description:
-    "Видеонаблюдение, СКУД, пожарная сигнализация и сети под ключ. Более 1148 реализованных объектов с 2014 года.",
+    `Видеонаблюдение, СКУД, пожарная сигнализация и сети под ключ. Более 1100 реализованных объектов с ${companyFacts.foundedYear} года.`,
 };
 
 export const viewport: Viewport = {
@@ -36,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className={`${manrope.variable} ${inter.variable} h-full`}>
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col bg-[#071A2F]">
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1 pt-20">{children}</main>
