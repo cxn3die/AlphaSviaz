@@ -1,5 +1,3 @@
-import { companyFacts } from "@/lib/data/site";
-
 export type ProjectCategory =
   | "Видеонаблюдение"
   | "СКУД"
@@ -34,6 +32,8 @@ export type ProjectItem = {
   /** Фото объекта из /public/images/projects. Нет фото — рисуется градиент */
   image?: string;
   imageAlt?: string;
+  /** Подпись автора для фото по CC BY / CC BY-SA, выводится на фото */
+  imageCredit?: string;
   /**
    * true — кадр иллюстрирует сценарий, а не снят на этом объекте.
    * Подписывается на карточке. Снимать флаг только вместе с заменой
@@ -54,12 +54,9 @@ export const projectCategories = [
 
 export const projectsPageCopy = {
   hero: {
-    eyebrow: "Портфолио объектов",
     title: "Проекты, которые работают каждый день",
     description:
       "Офисы, склады, производство и торговля — проектируем, монтируем и сопровождаем системы безопасности по всей России.",
-    mosaicTitle: "Отрасли в портфеле",
-    mosaicCaption: "Сколько объектов сдано в каждой",
   },
   intro:
     "Кейсы, где система безопасности решает задачу бизнеса, а не просто пишет видео: контроль транспорта, сверка кассовых операций, учёт рабочего времени, оповещение при эвакуации и микроклимат на производстве.",
@@ -95,12 +92,6 @@ export const projectIndustryById: Record<string, ProjectIndustry> = {
   "kerama-marazzi": "Торговля и склад",
 };
 
-export const projectsPageStats = [
-  { id: "projects", value: "1 148", label: "проектов реализовано" },
-  { id: "years", value: String(companyFacts.yearsOnMarket), label: "лет на рынке безопасности" },
-  { id: "crews", value: "15", label: "бригад монтажа и сервиса" },
-  { id: "warranty", value: "3 года", label: "гарантия по договору" },
-] as const;
 
 export const categoryThemes: Record<
   ProjectCategory,

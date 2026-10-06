@@ -36,7 +36,7 @@ export const services: ServiceLink[] = [
   {
     label: "СКУД (контроль доступа)",
     href: "/services/access-control",
-    description: "Турникеты, двери, учет проходов",
+    description: "Турникеты, двери, учёт проходов",
   },
   {
     label: "Пожарная и охранная безопасность",

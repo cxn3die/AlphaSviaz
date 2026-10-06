@@ -8,15 +8,17 @@ import { cn } from "@/lib/utils";
 
 type PageCtaSectionProps = {
   variant?: "default" | "light";
+  /** Без своего фона — когда под страницей лежит декоративный фон */
+  transparent?: boolean;
 };
 
-export function PageCtaSection({ variant = "default" }: PageCtaSectionProps) {
+export function PageCtaSection({ variant = "default", transparent = false }: PageCtaSectionProps) {
   const isLight = variant === "light";
 
   return (
     <section
       className={cn("py-16 md:py-20", isLight ? "bg-white" : "")}
-      style={isLight ? undefined : { backgroundColor: BRAND_NAVY_LIFTED }}
+      style={isLight || transparent ? undefined : { backgroundColor: BRAND_NAVY_LIFTED }}
     >
       <div className="container mx-auto px-4">
         <div

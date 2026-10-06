@@ -137,31 +137,120 @@ function ProjectsStat({ inView, className }: { inView: boolean; className: strin
         : `${previousMonth.count} ${plural(previousMonth.count, PROJECT_FORMS)} сдано в ${MONTHS_PREPOSITIONAL[previousMonth.month - 1]}`;
   }
 
+  const numberRef = useRef<HTMLSpanElement | null>(null);
+  const lineRef = useRef<HTMLDivElement | null>(null);
+  const fit = useFitToWidth(numberRef, lineRef, monthLine);
+
   const reveal =
     "opacity-0 translate-y-1 transition-[opacity,transform] duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-data-[revealed=true]:translate-y-0 group-data-[revealed=true]:opacity-100";
+  // Строки ровно по ширине числа: justify + выравнивание последней строки
+  const justify = "text-justify [text-align-last:justify]";
 
   return (
     <div className="mt-2">
       <p className={className} aria-label={`${formatCount(total)} проектов`}>
-        {inView && stats ? <CountUp end={total} duration={2} separator="" /> : 0}
+        <span ref={numberRef} className="inline-block">
+          {inView && stats ? <CountUp end={total} duration={2} separator="" /> : 0}
+        </span>
       </p>
 
-      {/* Место под строки зарезервировано: при появлении карточка не прыгает */}
-      <div className="group/month mt-3 min-h-[3.75rem] md:mt-4 md:min-h-[4.25rem] lg:min-h-[5rem]">
-        <p className={cn("text-[18px] font-bold leading-tight tracking-[-0.01em] md:text-[22px] lg:text-[30px]", reveal)}>
-          <span className="stat-sheen">{monthLine || "\u00A0"}</span>
-        </p>
+      {/*
+        Ширина блока = ширина числа (width задаёт хук). Первая строка
+        растянута ровно по числу, вторая прижата к той же правой границе.
+      */}
+      <div
+        className="group/month mt-2 md:mt-3"
+        style={fit ? { width: fit.width } : undefined}
+      >
+        <div
+          ref={lineRef}
+          className={cn("font-bold leading-[1.15] text-[18px] md:text-[22px]", reveal)}
+          style={fit ? { fontSize: fit.size } : undefined}
+        >
+          {fit?.lines ? (
+            fit.lines.map((line) => (
+              <span key={line} className={cn("stat-sheen block whitespace-nowrap", justify)}>
+                {line}
+              </span>
+            ))
+          ) : (
+            <span className={cn("stat-sheen block", justify)}>{monthLine || "\u00A0"}</span>
+          )}
+        </div>
         <p
           className={cn(
-            "mt-1 text-[14px] font-semibold text-white/70 md:text-[16px] lg:mt-1.5 lg:text-[20px]",
+            "mt-1 text-right font-semibold text-white/70 text-[14px]",
             "opacity-0 transition-opacity duration-500 ease-out group-hover/month:opacity-100 group-data-[revealed=true]:opacity-100"
           )}
+          style={fit ? { fontSize: Math.max(12, Math.round(fit.size * 0.62)) } : undefined}
         >
           {stats ? `в среднем ${stats.averagePerMonth} в месяц` : "\u00A0"}
         </p>
       </div>
     </div>
   );
+}
+
+/**
+ * Подбирает размер шрифта строки так, чтобы она была ровно в ширину числа.
+ * Если в одну строку шрифт выходит мельче 13px (узкий телефон) — делит
+ * текст на две примерно равные строки и подбирает размер под них.
+ * Следит за шириной числа (она меняется при счёте и при повороте экрана).
+ */
+function useFitToWidth(
+  numberRef: RefObject<HTMLElement>,
+  lineRef: RefObject<HTMLElement>,
+  text: string
+) {
+  const [fit, setFit] = useState<{ width: number; size: number; lines: string[] | null } | null>(null);
+
+  useEffect(() => {
+    const numberEl = numberRef.current;
+    const lineEl = lineRef.current;
+    if (!numberEl || !lineEl || !text) return;
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const measure = () => {
+      const width = numberEl.getBoundingClientRect().width;
+      if (!width) return;
+      const style = getComputedStyle(lineEl);
+      ctx.font = `${style.fontWeight} 100px ${style.fontFamily}`;
+      const at100 = (value: string) => ctx.measureText(value).width;
+
+      const single = (100 * width) / at100(text);
+      if (single >= 13) {
+        setFit({ width, size: Math.min(single, 40), lines: null });
+        return;
+      }
+
+      // Делим по пробелу, ближайшему к середине
+      const words = text.split(" ");
+      let best: [string, string] = [text, ""];
+      let bestDiff = Infinity;
+      for (let i = 1; i < words.length; i += 1) {
+        const a = words.slice(0, i).join(" ");
+        const b = words.slice(i).join(" ");
+        const diff = Math.abs(at100(a) - at100(b));
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          best = [a, b];
+        }
+      }
+      const size = (100 * width) / Math.max(at100(best[0]), at100(best[1]));
+      setFit({ width, size: Math.min(size, 40), lines: best });
+    };
+
+    measure();
+    document.fonts?.ready.then(measure);
+    const observer = new ResizeObserver(measure);
+    observer.observe(numberEl);
+    return () => observer.disconnect();
+  }, [numberRef, lineRef, text]);
+
+  return fit;
 }
 
 const containerVariants: Variants = {

@@ -18,10 +18,6 @@ export default function SourcesPage() {
       <PageHero
         title={sourcesPageCopy.title}
         description={sourcesPageCopy.description}
-        breadcrumbs={[
-          { label: "Главная", href: "/" },
-          { label: sourcesPageCopy.eyebrow },
-        ]}
       />
 
       <section className="py-16 md:py-20">

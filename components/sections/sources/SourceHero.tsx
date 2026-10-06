@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { BRAND_NAVY_HERO } from "@/lib/brand-colors";
-import { sourcesPageCopy } from "@/lib/data/sources";
+import { cn } from "@/lib/utils";
 
 type SourceHeroProps = {
   title: string;
@@ -12,13 +11,25 @@ type SourceHeroProps = {
   value: ReactNode;
   suffix?: string;
   caption: string;
+  /** Без своего фона — под страницей уже лежит декоративный фон */
+  transparent?: boolean;
+  /** Заходить под шапку (-mt-20 pt-20). false — если это делает обёртка */
+  underHeader?: boolean;
 };
 
-export function SourceHero({ title, lead, value, suffix, caption }: SourceHeroProps) {
+export function SourceHero({
+  title,
+  lead,
+  value,
+  suffix,
+  caption,
+  transparent = false,
+  underHeader = true,
+}: SourceHeroProps) {
   return (
     <section
-      className="relative -mt-20 pt-20 overflow-hidden text-white"
-      style={{ backgroundColor: BRAND_NAVY_HERO }}
+      className={cn("relative overflow-hidden text-white", underHeader && "-mt-20 pt-20")}
+      style={transparent ? undefined : { backgroundColor: BRAND_NAVY_HERO }}
     >
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_20%_-30%,rgba(66,165,245,0.32),transparent_55%)]"
@@ -30,17 +41,7 @@ export function SourceHero({ title, lead, value, suffix, caption }: SourceHeroPr
       />
 
       <div className="container relative z-10 mx-auto px-4 pb-14 pt-12 md:pb-20 md:pt-16">
-        <nav aria-label="Хлебные крошки" className="mb-8 flex flex-wrap items-center gap-1 text-sm text-white/60">
-          <Link href="/" className="transition hover:text-[#64B5F6]">
-            Главная
-          </Link>
-          <ChevronRight className="size-4 shrink-0 text-white/30" aria-hidden />
-          <Link href="/sources" className="transition hover:text-[#64B5F6]">
-            {sourcesPageCopy.eyebrow}
-          </Link>
-          <ChevronRight className="size-4 shrink-0 text-white/30" aria-hidden />
-          <span className="text-white/90">{title}</span>
-        </nav>
+        <Breadcrumbs className="mb-8" />
 
         <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-16">
           <div className="max-w-2xl">
