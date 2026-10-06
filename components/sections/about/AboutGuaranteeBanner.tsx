@@ -34,10 +34,7 @@ export function AboutGuaranteeBanner() {
                 <Shield className="size-8 text-[#64B5F6]" strokeWidth={1.5} />
               </div>
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.1em] text-[#64B5F6]">
-                  Наше обещание
-                </p>
-                <h2 className="mt-2 font-heading text-2xl font-bold text-white md:text-3xl">
+                <h2 className="font-heading text-2xl font-bold text-white md:text-3xl">
                   {guarantee.title}
                 </h2>
                 <p className="mt-2 max-w-lg text-base text-white/70">{guarantee.description}</p>

@@ -5,7 +5,7 @@ import { getServicePage } from "@/lib/data/servicePages";
 
 export const metadata = {
   title: "Видеонаблюдение — Альфа-Связь",
-  description: "Профессиональный монтаж видеонаблюдения под ключ по всей России.",
+  description: "Подбираем камеры, монтируем и настраиваем видеонаблюдение по всей России.",
 };
 
 export default function VideoSurveillancePage() {

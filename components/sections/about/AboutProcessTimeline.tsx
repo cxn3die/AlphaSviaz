@@ -137,7 +137,7 @@ function ChannelMerge() {
       </svg>
 
       <p className="text-center text-sm text-white/45">
-        Дальше маршрут один — независимо от того, откуда пришла заявка
+        Дальше любая заявка проходит одни и те же этапы
       </p>
     </div>
   );

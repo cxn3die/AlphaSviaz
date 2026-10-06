@@ -34,14 +34,8 @@ export function ServicesOverviewSection() {
     <section className="py-16 md:py-20">
       <div className="container mx-auto px-4">
         <p className="max-w-2xl text-lg text-white/65">
-          {siteConfig.description}. Выберите направление — на странице{" "}
-          <a
-            href="#services-list"
-            className="font-semibold text-[#64B5F6] underline decoration-[#42A5F5]/40 decoration-2 underline-offset-4 transition hover:text-white hover:decoration-white/60"
-          >
-            услуги
-          </a>{" "}
-          описаны задачи, состав работ и типовые объекты.
+          {siteConfig.description}. Выберите направление. На его странице есть
+          состав работ, бренды оборудования и типовые объекты.
         </p>
 
         <ul

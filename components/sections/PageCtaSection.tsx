@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Phone } from "lucide-react";
 
 import { BRAND_NAVY_LIFTED } from "@/lib/brand-colors";
-import { siteConfig, serviceCoverage } from "@/lib/data/site";
+import { siteConfig } from "@/lib/data/site";
 import { REQUEST_HREF } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
@@ -36,7 +36,7 @@ export function PageCtaSection({ variant = "default", transparent = false }: Pag
                 isLight ? "text-[#071A2F]" : "text-white"
               )}
             >
-              Нужна консультация по проекту?
+              Есть объект?
             </h2>
             <p
               className={cn(
@@ -44,7 +44,7 @@ export function PageCtaSection({ variant = "default", transparent = false }: Pag
                 isLight ? "text-[#4A5C6E]" : "text-white/75"
               )}
             >
-              Оставьте заявку — подберём решение под ваш объект {serviceCoverage.region}.
+              Оставьте заявку. Менеджер перезвонит, инженер посчитает стоимость.
             </p>
           </div>
 

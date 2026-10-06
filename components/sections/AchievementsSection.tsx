@@ -62,7 +62,7 @@ const cards: AchievementCardData[] = [
     value: 100,
     suffix: "%",
     label: "объектов",
-    title: "сданы в срок и работают без сбоев",
+    title: "сданы в срок по договору",
     variant: "blue",
     desktopHeight: "lg:min-h-[540px]",
     desktopOffset: "lg:-mt-8",
@@ -457,7 +457,7 @@ export function AchievementsSection() {
             Цифры и факты
           </p>
           <h2 className="mt-4 text-[40px] font-bold leading-tight text-white md:text-[48px] lg:text-[56px]">
-            Нам доверяют безопасность
+            Компания в цифрах
           </h2>
           <p className="mt-6 text-[18px] text-white/70 md:text-[20px]">
             За {companyFacts.yearsOnMarket} лет работы мы реализовали более тысячи проектов по всей России.

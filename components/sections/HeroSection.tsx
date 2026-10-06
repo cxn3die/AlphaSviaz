@@ -17,7 +17,7 @@ export function HeroSection() {
         <div className="max-w-3xl">
           <span className="mb-6 block h-[4px] w-[60px] rounded-full bg-[#F25C1F]" />
           <h1 className="font-heading text-[clamp(1.75rem,6.5vw,3.75rem)] font-bold leading-[1.1] text-white md:text-6xl">
-            Комплексные системы безопасности для бизнеса по всей России
+            Видеонаблюдение, контроль доступа и пожарная сигнализация для предприятий
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-white/75 md:text-xl">
             Проектируем и внедряем видеонаблюдение, СКУД, пожарную автоматику и

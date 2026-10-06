@@ -10,7 +10,7 @@ export const heroContent = {
    * иначе на сайте появится непроверенная характеристика.
    */
   equipment: {
-    eyebrow: "Работаем на оборудовании",
+    eyebrow: "Бренды, с которыми работаем",
     image: "/images/equipment/kamera-hikvision.webp",
     imageAlt:
       "Монтажник «Альфа-Связь» устанавливает уличную IP-камеру Hikvision на опоре",
