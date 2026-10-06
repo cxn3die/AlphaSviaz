@@ -69,6 +69,8 @@ export const servicePages: Record<string, ServicePageData> = {
     ],
     objects: ["Бизнес-центры", "Склады", "Парковки", "Промышленные объекты"],
     gradient: "linear-gradient(135deg, #0E2542 0%, #1E88E5 60%, #133456 100%)",
+    image: "/images/services/card-skud.webp",
+    imageAlt: "Турникеты и считыватель системы контроля доступа на проходной",
   },
   "fire-safety": {
     slug: "fire-safety",
@@ -88,6 +90,8 @@ export const servicePages: Record<string, ServicePageData> = {
     ],
     objects: ["Торговые центры", "Склады", "Офисы", "Производство"],
     gradient: "linear-gradient(135deg, #0E2542 0%, #E65100 50%, #1565C0 100%)",
+    image: "/images/services/card-fire.webp",
+    imageAlt: "Оборудование пожарной сигнализации на объекте",
   },
   networks: {
     slug: "networks",

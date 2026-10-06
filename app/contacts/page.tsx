@@ -18,10 +18,6 @@ export default function ContactsPage() {
           underHeader={false}
           title="Контакты"
           description={`Свяжитесь с ${siteConfig.name} — ответим на вопросы и рассчитаем проект.`}
-          breadcrumbs={[
-            { label: "Главная", href: "/" },
-            { label: "Контакты" },
-          ]}
         />
         <ContactsSection />
       </div>

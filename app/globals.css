@@ -280,6 +280,20 @@
   animation: stat-sheen 5s linear infinite;
 }
 
+/* Ленты логотипа на страницах-источниках (LogoDriftBackdrop) */
+.logo-rail-a,
+.logo-rail-b {
+  transform: rotate(-24deg);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.logo-rail-a {
+  animation-name: brand-diagonal-drift-a;
+}
+.logo-rail-b {
+  animation-name: brand-diagonal-drift-b;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .brand-diagonal-rail,
   .stat-sheen {

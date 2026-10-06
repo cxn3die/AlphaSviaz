@@ -1,46 +1,12 @@
-﻿"use client";
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowDown, ArrowUpRight, MapPin } from "lucide-react";
 
 import { AppImage as Image } from "@/components/ui/app-image";
-import Link from "next/link";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
-import {
-  ArrowDown,
-  ArrowUpRight,
-  Camera,
-  Factory,
-  Flame,
-  Gauge,
-  GraduationCap,
-  KeyRound,
-  MapPin,
-  Network,
-  Plane,
-  Shield,
-  Store,
-  TrafficCone,
-  Wheat,
-} from "lucide-react";
-import { useMemo, useState } from "react";
-
-import {
-  categoryThemes,
-  getProjectIndustries,
-  projectIndustryById,
-  projects,
-  projectsPageCopy,
-  type ProjectCategory,
-  type ProjectIndustry,
-  type ProjectItem,
-} from "@/lib/data/projects";
+import { categoryThemes, projects, projectsPageCopy, type ProjectItem } from "@/lib/data/projects";
 import { cn } from "@/lib/utils";
-
-const categoryIcons: Record<ProjectCategory, typeof Camera> = {
-  Видеонаблюдение: Camera,
-  СКУД: KeyRound,
-  "Пожарная безопасность": Flame,
-  Сети: Network,
-  "Мониторинг и интеграция": Gauge,
-};
 
 const serviceLinks: Record<string, string> = {
   Видеонаблюдение: "/services/video-surveillance",
@@ -49,60 +15,10 @@ const serviceLinks: Record<string, string> = {
   Сети: "/services/networks",
 };
 
-const industryIcons: Record<ProjectIndustry, typeof Camera> = {
-  Производство: Factory,
-  "Торговля и склад": Store,
-  "Соцобъекты и образование": GraduationCap,
-  Агропром: Wheat,
-  Транспорт: Plane,
-  "Дорожное строительство": TrafficCone,
-};
-
-function FilterButton({
-  label,
-  count,
-  icon: Icon,
-  isActive,
-  onClick,
-}: {
-  label: string;
-  count: number;
-  icon: typeof Camera;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="tab"
-      aria-selected={isActive}
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition duration-300",
-        isActive
-          ? "bg-[#1E88E5] text-white shadow-[0_0_24px_rgba(30,136,229,0.35)]"
-          : "border border-white/15 bg-white/5 text-white/70 hover:border-white/25 hover:bg-white/10 hover:text-white"
-      )}
-    >
-      <Icon className="size-4 shrink-0 opacity-80" aria-hidden />
-      {label}
-      <span
-        className={cn(
-          "rounded-full px-1.5 text-xs tabular-nums",
-          isActive ? "bg-white/20 text-white" : "bg-white/10 text-white/60"
-        )}
-      >
-        {count}
-      </span>
-    </button>
-  );
-}
-
 /** «1 кейс», «2 кейса», «13 кейсов» */
 function caseWord(count: number) {
   const mod100 = count % 100;
   if (mod100 >= 11 && mod100 <= 14) return "кейсов";
-
   switch (count % 10) {
     case 1:
       return "кейс";
@@ -115,127 +31,47 @@ function caseWord(count: number) {
   }
 }
 
-const gridVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.07, delayChildren: 0.05 },
-  },
-};
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 24, scale: 0.98 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.45 },
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.96,
-    transition: { duration: 0.25 },
-  },
-};
-
+/**
+ * Кейсы — «журнал объектов»: крупное фото и описание рядом, ряды
+ * чередуются слева/справа, тонкие разделители, номер объекта.
+ * Без фильтров, бейджей REC и карточек-коробок — по решению владельца.
+ */
 export function ProjectsExperience() {
-  const [activeIndustry, setActiveIndustry] = useState<string>("Все");
-
-  const industries = useMemo(() => getProjectIndustries(), []);
-
-  const filtered = useMemo(() => {
-    const list =
-      activeIndustry === "Все"
-        ? projects
-        : projects.filter(
-            (project) => projectIndustryById[project.id] === activeIndustry
-          );
-
-    // Сильные кейсы вперёд — размером карточки не выделяем, только порядком
-    return [...list].sort(
-      (a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured))
-    );
-  }, [activeIndustry]);
+  // Сильные кейсы вперёд
+  const list = [...projects].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
+  const total = list.length;
 
   return (
-    <section className="relative overflow-hidden bg-[#0C2340] pb-20 pt-4 md:pb-28">
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0C2340] to-transparent"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -right-40 top-1/3 size-80 rounded-full bg-[#1E88E5]/10 blur-[100px]"
-        aria-hidden
-      />
-
+    <section className="relative bg-[#0C2340] pb-20 pt-10 md:pb-28 md:pt-14">
       <div className="container relative z-10 mx-auto px-4">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-6 border-b border-white/10 pb-10 lg:flex-row lg:items-end lg:justify-between">
           <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
             {projectsPageCopy.intro}
           </p>
-
-          <div
-            className="flex flex-wrap gap-2"
-            role="tablist"
-            aria-label="Фильтр по отраслям"
-          >
-            <FilterButton
-              label="Все"
-              count={projects.length}
-              icon={Shield}
-              isActive={activeIndustry === "Все"}
-              onClick={() => setActiveIndustry("Все")}
-            />
-            {industries.map(({ label, count }) => (
-              <FilterButton
-                key={label}
-                label={label}
-                count={count}
-                icon={industryIcons[label]}
-                isActive={activeIndustry === label}
-                onClick={() => setActiveIndustry(label)}
-              />
-            ))}
-          </div>
+          <p className="font-mono text-sm uppercase tracking-[0.18em] text-white/40">
+            {String(total).padStart(2, "0")} объектов
+          </p>
         </div>
 
-        {/*
-          Тринадцать кейсов на телефоне — это очень долгая прокрутка.
-          Кнопка перебрасывает сразу за список, к блоку с заявкой.
-        */}
+        {/* На телефоне 13 кейсов — долгая прокрутка: кнопка сразу к заявке */}
         <a
           href="#projects-end"
-          className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/70 transition hover:border-[#42A5F5]/40 hover:text-white lg:hidden"
+          className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white/60 transition hover:text-white lg:hidden"
         >
           <ArrowDown className="size-4" aria-hidden />
-          Пролистать {filtered.length} {caseWord(filtered.length)}
+          Пролистать {total} {caseWord(total)}
         </a>
 
-        <AnimatePresence mode="wait">
-          <motion.ul
-            key={activeIndustry}
-            variants={gridVariants}
-            initial="hidden"
-            animate="show"
-            exit="hidden"
-            className="mt-12 grid gap-5 lg:grid-cols-2 lg:gap-6"
-          >
-            {filtered.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </motion.ul>
-        </AnimatePresence>
-
-        {filtered.length === 0 && (
-          <p className="mt-16 text-center text-lg text-white/50">
-            {projectsPageCopy.emptyFilter}
-          </p>
-        )}
+        <ol className="mt-4">
+          {list.map((project, index) => (
+            <ProjectRow key={project.id} project={project} index={index} total={total} />
+          ))}
+        </ol>
 
         <span id="projects-end" className="block scroll-mt-24" aria-hidden />
 
-        {filtered.some((project) => project.illustrative) && (
-          <p className="mt-10 border-t border-white/10 pt-6 text-sm text-white/40">
+        {list.some((project) => project.illustrative) && (
+          <p className="mt-6 text-sm text-white/40">
             Часть кадров иллюстрирует сценарий работы системы и снята не на этих
             объектах. Фотографии с площадок заказчика публикуем по согласованию.
           </p>
@@ -245,209 +81,116 @@ export function ProjectsExperience() {
   );
 }
 
-function CaseBlock({
-  label,
-  text,
-  accent,
-  highlight,
-}: {
-  label: string;
-  text: string;
-  accent: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "relative pl-4",
-        highlight && "rounded-r-[10px] bg-white/[0.04] py-3 pr-4"
-      )}
-    >
-      <span
-        className="absolute inset-y-0 left-0 w-[2px] rounded-full"
-        style={{ background: highlight ? accent : "rgba(255,255,255,0.15)" }}
-        aria-hidden
-      />
-      <p
-        className="text-[11px] font-semibold uppercase tracking-[0.12em]"
-        style={{ color: highlight ? accent : "rgba(255,255,255,0.4)" }}
-      >
-        {label}
-      </p>
-      <p
-        className={cn(
-          "mt-1.5 text-sm leading-relaxed md:text-[15px]",
-          highlight ? "text-white/90" : "text-white/60"
-        )}
-      >
-        {text}
-      </p>
-    </div>
-  );
-}
-
-function ProjectCard({ project }: { project: ProjectItem }) {
+function ProjectRow({ project, index, total }: { project: ProjectItem; index: number; total: number }) {
   const theme = categoryThemes[project.category];
-  const Icon = categoryIcons[project.category];
+  const reversed = index % 2 === 1;
+  const number = String(index + 1).padStart(2, "0");
 
   return (
-    <motion.li variants={cardVariants} layout className="group relative list-none">
-      <article
-        className={cn(
-          "relative flex h-full flex-col overflow-hidden rounded-[20px] border border-white/10 bg-[#133456]/80 transition duration-500",
-          "hover:border-white/20 hover:shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
-        )}
-      >
-        <div
-          className="relative aspect-[16/9] overflow-hidden"
-          style={{ background: theme.gradient }}
-        >
+    <motion.li
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="group grid grid-cols-1 items-center gap-8 border-b border-white/10 py-12 md:py-16 lg:grid-cols-12 lg:gap-14"
+    >
+      {/* Фото с тонкими уголками видоискателя — намёк на тему, без «REC» */}
+      <div className={cn("relative lg:col-span-7", reversed && "lg:order-2")}>
+        <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] bg-[#133456]">
           {project.image && (
             <Image
               src={project.image}
               alt={project.imageAlt ?? project.title}
               fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              sizes="(max-width: 1024px) 100vw, 58vw"
+              className="object-cover saturate-[0.9] transition [transition-duration:900ms] group-hover:scale-[1.03] group-hover:saturate-100"
             />
           )}
-
-          <CctvFrame />
-
-          <div className="absolute left-4 top-4 flex items-center gap-2 rounded-md bg-black/50 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-white/90 backdrop-blur-sm">
-            <span
-              className="size-1.5 rounded-full bg-red-500"
-              style={{ animation: "projects-rec 1.2s ease-in-out infinite" }}
-            />
-            REC
-          </div>
-
-          {project.year && (
-            <div className="absolute right-4 top-4 rounded-md border border-white/20 bg-black/40 px-2 py-1 font-mono text-[10px] text-white/70 backdrop-blur-sm">
-              {project.year}
-            </div>
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,rgba(12,35,64,0.45)_100%)]" aria-hidden />
+          <Viewfinder />
+          {project.imageCredit && (
+            <p className="absolute bottom-3 right-4 text-[11px] text-white/60">{project.imageCredit}</p>
           )}
+        </div>
+      </div>
 
-          {!project.image && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div
-                className="flex size-20 items-center justify-center rounded-2xl border border-white/20 bg-black/25 backdrop-blur-md transition duration-500 group-hover:scale-110 group-hover:border-white/40 md:size-24"
-                style={{ boxShadow: `0 0 40px ${theme.glow}` }}
-              >
-                <Icon
-                  className="size-10 text-white/90 md:size-12"
-                  strokeWidth={1.5}
-                  aria-hidden
-                />
-              </div>
-            </div>
-          )}
-
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0C2340] to-transparent"
-            aria-hidden
-          />
+      <div className={cn("lg:col-span-5", reversed && "lg:order-1")}>
+        <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.18em]">
+          <span className="text-white/40">
+            Объект {number}
+            <span className="text-white/20"> / {String(total).padStart(2, "0")}</span>
+          </span>
+          <span className="h-px flex-1 bg-white/10" aria-hidden />
+          <span style={{ color: theme.accent }}>{project.category}</span>
         </div>
 
-        <div className="flex flex-1 flex-col p-5 md:p-7">
-          <div className="flex items-start justify-between gap-3">
-            <p
-              className="text-xs font-semibold uppercase tracking-[0.1em]"
-              style={{ color: theme.accent }}
-            >
-              {project.category}
-            </p>
-            {project.scale && (
-              <span className="shrink-0 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs text-white/55">
-                {project.scale}
-              </span>
-            )}
-          </div>
-
-          <h2 className="mt-2 font-heading text-2xl font-bold leading-tight text-white">
-            {project.title}
-          </h2>
-
-          <p className="mt-1 text-sm text-white/50">{project.industry}</p>
-
+        <h2 className="mt-5 font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-bold leading-[1.08] tracking-tight text-white">
+          {project.title}
+        </h2>
+        <p className="mt-2 flex flex-wrap items-center gap-x-2 text-sm text-white/50">
+          {project.industry}
           {project.location && (
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-white/50">
-              <MapPin className="size-3.5 shrink-0" aria-hidden />
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="size-3.5" aria-hidden />
               {project.location}
-            </p>
+            </span>
           )}
+        </p>
 
-          <div className="mt-5 space-y-4">
-            <CaseBlock label="Задача" text={project.task} accent={theme.accent} />
-            <CaseBlock label="Решение" text={project.solution} accent={theme.accent} />
-            <CaseBlock
-              label="Результат"
-              text={project.result}
-              accent={theme.accent}
-              highlight
-            />
+        <dl className="mt-7 space-y-5">
+          <div>
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/35">Задача</dt>
+            <dd className="mt-1.5 text-[15px] leading-relaxed text-white/70">{project.task}</dd>
           </div>
+          <div>
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/35">Решение</dt>
+            <dd className="mt-1.5 text-[15px] leading-relaxed text-white/70">{project.solution}</dd>
+          </div>
+          <div className="border-l-2 border-[#F25C1F] pl-4">
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#FF8A57]">Результат</dt>
+            <dd className="mt-1.5 text-[15px] leading-relaxed text-white">{project.result}</dd>
+          </div>
+        </dl>
 
-          {project.stats && project.stats.length > 0 && (
-            <ul className="mt-5 flex flex-wrap gap-4 border-t border-white/10 pt-4">
-              {project.stats.map((stat) => (
-                <li key={stat.label}>
-                  <p className="font-heading text-lg font-bold text-white md:text-xl">
-                    {stat.value}
-                  </p>
-                  <p className="text-xs text-white/45">{stat.label}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <ul className="mt-5 flex flex-wrap gap-2">
-            {project.services.map((service) => {
+        <div className="mt-8 flex flex-col items-start gap-3 border-t border-white/10 pt-5">
+          <p className="text-sm text-white/50">
+            {project.services.map((service, i) => {
               const href = serviceLinks[service];
-              return href ? (
-                <li key={service}>
-                  <Link
-                    href={href}
-                    className="inline-block rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70 transition hover:border-[#1E88E5]/50 hover:bg-[#1E88E5]/15 hover:text-white"
-                  >
-                    {service}
-                  </Link>
-                </li>
-              ) : (
-                <li
-                  key={service}
-                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70"
-                >
-                  {service}
-                </li>
+              return (
+                <span key={service}>
+                  {i > 0 && <span className="mx-2 text-white/20">·</span>}
+                  {href ? (
+                    <Link href={href} className="transition hover:text-white">
+                      {service}
+                    </Link>
+                  ) : (
+                    service
+                  )}
+                </span>
               );
             })}
-          </ul>
-
+          </p>
           <Link
-            href="/contacts"
-            className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-semibold text-[#42A5F5] transition group-hover:gap-3 hover:text-white"
+            href="/contacts/#request"
+            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-[#64B5F6] transition hover:text-white"
           >
             Обсудить похожий объект
-            <ArrowUpRight className="size-4" aria-hidden />
+            <ArrowUpRight className="size-4 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
           </Link>
         </div>
-      </article>
+      </div>
     </motion.li>
   );
 }
 
-function CctvFrame() {
-  const corner =
-    "absolute size-5 border-white/40 transition duration-500 group-hover:border-white/70 group-hover:size-6";
-
+function Viewfinder() {
+  const corner = "absolute size-6 border-white/55 transition-all duration-500 group-hover:size-8 group-hover:border-white/80";
   return (
-    <>
-      <span className={cn(corner, "left-3 top-3 border-l-2 border-t-2")} aria-hidden />
-      <span className={cn(corner, "right-3 top-3 border-r-2 border-t-2")} aria-hidden />
-      <span className={cn(corner, "bottom-3 left-3 border-b-2 border-l-2")} aria-hidden />
-      <span className={cn(corner, "right-3 bottom-3 border-b-2 border-r-2")} aria-hidden />
-    </>
+    <div className="pointer-events-none absolute inset-4" aria-hidden>
+      <span className={cn(corner, "left-0 top-0 border-l border-t")} />
+      <span className={cn(corner, "right-0 top-0 border-r border-t")} />
+      <span className={cn(corner, "bottom-0 left-0 border-b border-l")} />
+      <span className={cn(corner, "bottom-0 right-0 border-b border-r")} />
+    </div>
   );
 }
-

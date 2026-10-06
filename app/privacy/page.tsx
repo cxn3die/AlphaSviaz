@@ -12,10 +12,6 @@ export default function PrivacyPage() {
       <PageHero
         title="Политика конфиденциальности"
         description="Порядок обработки персональных данных пользователей сайта."
-        breadcrumbs={[
-          { label: "Главная", href: "/" },
-          { label: "Политика конфиденциальности" },
-        ]}
       />
       <PrivacyContentSection />
     </div>

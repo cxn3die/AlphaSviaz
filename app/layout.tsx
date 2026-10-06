@@ -3,6 +3,7 @@ import { Inter, Manrope } from "next/font/google";
 
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { NavigationTrailTracker } from "@/components/navigation/NavigationTrailTracker";
 import { companyFacts } from "@/lib/data/site";
 
 import "./globals.css";
@@ -39,6 +40,7 @@ export default function RootLayout({
     <html lang="ru" className={`${manrope.variable} ${inter.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-[#071A2F]">
         <div className="flex min-h-screen flex-col">
+          <NavigationTrailTracker />
           <Header />
           <main className="flex-1 pt-20">{children}</main>
           <Footer />

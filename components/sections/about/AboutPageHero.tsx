@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { ChevronRight } from "lucide-react";
 
 import { BlueprintPattern } from "@/components/decorative/BlueprintPattern";
-import { LiveProjectsTotal } from "@/components/stats/LiveProjectsTotal";
+import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
+import { StatParallelograms } from "@/components/stats/StatParallelograms";
 import { aboutPageCopy, companyInfo } from "@/lib/data/company";
 
 export function AboutPageHero() {
@@ -24,16 +23,7 @@ export function AboutPageHero() {
       <BlueprintPattern variant="plan" />
 
       <div className="container relative z-10 mx-auto px-4 pb-14 pt-12 md:pb-20 md:pt-16">
-        <nav
-          aria-label="Хлебные крошки"
-          className="mb-8 flex flex-wrap items-center gap-1 text-sm text-white/60"
-        >
-          <Link href="/" className="transition hover:text-[#64B5F6]">
-            Главная
-          </Link>
-          <ChevronRight className="size-4 shrink-0 text-white/30" aria-hidden />
-          <span className="text-white/90">О компании</span>
-        </nav>
+        <Breadcrumbs className="mb-8" />
 
         <div>
           <motion.div
@@ -59,24 +49,7 @@ export function AboutPageHero() {
 
         </div>
 
-        <motion.ul
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.55 }}
-          className="mt-14 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4"
-        >
-          {stats.map((stat) => (
-            <li
-              key={stat.label}
-              className="rounded-xl border border-white/10 bg-white/[0.05] px-4 py-4 backdrop-blur-sm md:py-5"
-            >
-              <p className="font-heading text-2xl font-bold text-[#64B5F6] md:text-3xl">
-                {stat.id === "projects" ? <LiveProjectsTotal /> : stat.value}
-              </p>
-              <p className="mt-1 text-xs text-white/55 md:text-sm">{stat.label}</p>
-            </li>
-          ))}
-        </motion.ul>
+        <StatParallelograms items={stats} className="mt-14 lg:mr-3" />
       </div>
     </section>
   );

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import type { ReactNode } from "react";
 
 import { LogoDriftBackdrop } from "@/components/decorative/LogoDriftBackdrop";
 import { ProjectMosaicBackdrop } from "@/components/decorative/ProjectMosaicBackdrop";
@@ -235,9 +234,9 @@ function OtherSources({ current }: { current: SourceEntry["slug"] }) {
 }
 
 /**
- * Необычные фоны — по решению владельца только на двух страницах:
- * годы — плывущие ленты из логотипа, проекты — «доска объектов».
- * Остальные страницы без фона.
+ * Необычные фоны — на двух страницах, и по решению владельца на ВСЮ
+ * страницу, без разделительных линий: годы — плывущие ленты из логотипа,
+ * проекты — «доска объектов». Остальные страницы без фона.
  */
 const backdrops: Partial<Record<SourceEntry["slug"], () => JSX.Element>> = {
   years: () => <LogoDriftBackdrop />,
@@ -250,41 +249,48 @@ const extras: Partial<Record<SourceEntry["slug"], () => JSX.Element>> = {
   clients: ClientsExtra,
 };
 
-function WithBackdrop({ slug, children }: { slug: SourceEntry["slug"]; children: ReactNode }) {
-  const Backdrop = backdrops[slug];
-  if (!Backdrop) return <>{children}</>;
-  return (
-    <div className="relative overflow-hidden border-t border-white/8">
-      <Backdrop />
-      <div className="relative">{children}</div>
-    </div>
-  );
-}
-
-export function SourceDetail({ source }: { source: SourceEntry }) {
+function PageBody({ source, onBackdrop }: { source: SourceEntry; onBackdrop: boolean }) {
   const Extra = extras[source.slug];
 
   return (
-    <div className="bg-[#0C2340]">
+    <>
       <SourceHero
         title={source.title}
         lead={source.lead}
         value={source.slug === "projects" ? <LiveProjectsTotal /> : source.value}
         suffix={source.suffix}
         caption={source.caption}
+        transparent={onBackdrop}
+        underHeader={!onBackdrop}
       />
-
       <MethodSection method={source.method} />
+      {Extra && <Extra />}
+      <div className={cn(!onBackdrop && "border-t border-white/8")}>
+        <OtherSources current={source.slug} />
+      </div>
+      <PageCtaSection transparent={onBackdrop} />
+    </>
+  );
+}
 
-      {/* У страниц с фоном фон лежит под нижними блоками целиком */}
-      <WithBackdrop slug={source.slug}>
-        {Extra && <Extra />}
-        <div className={cn(!backdrops[source.slug] && "border-t border-white/8")}>
-          <OtherSources current={source.slug} />
-        </div>
-      </WithBackdrop>
+export function SourceDetail({ source }: { source: SourceEntry }) {
+  const Backdrop = backdrops[source.slug];
 
-      <PageCtaSection />
+  if (!Backdrop) {
+    return (
+      <div className="bg-[#0C2340]">
+        <PageBody source={source} onBackdrop={false} />
+      </div>
+    );
+  }
+
+  // Фон лежит под всей страницей, включая первый экран под шапкой
+  return (
+    <div className="relative -mt-20 overflow-hidden bg-[#0C2340] pt-20">
+      <Backdrop />
+      <div className="relative">
+        <PageBody source={source} onBackdrop />
+      </div>
     </div>
   );
 }

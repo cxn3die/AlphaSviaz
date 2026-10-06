@@ -1,18 +1,12 @@
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import type { ReactNode } from "react";
 
+import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 import { BRAND_NAVY_HERO, BRAND_BLUE } from "@/lib/brand-colors";
 import { cn } from "@/lib/utils";
-
-export type BreadcrumbItem = {
-  label: string;
-  href?: string;
-};
 
 type PageHeroProps = {
   title: string;
   description?: string;
-  breadcrumbs?: BreadcrumbItem[];
   variant?: "light" | "brand";
   className?: string;
   /**
@@ -20,15 +14,17 @@ type PageHeroProps = {
    * уже сделала обёртка страницы (контакты).
    */
   underHeader?: boolean;
+  /** Иллюстрация справа — только на десктопе (lg+) */
+  aside?: ReactNode;
 };
 
 export function PageHero({
   title,
   description,
-  breadcrumbs,
   variant = "brand",
   className,
   underHeader = true,
+  aside,
 }: PageHeroProps) {
   const isBrand = variant === "brand";
 
@@ -38,7 +34,7 @@ export function PageHero({
         "relative overflow-hidden",
         underHeader && "-mt-20 pt-20",
         isBrand ? "text-white" : "border-b border-[#E5E9F0] bg-[#F5F7FA]",
-        className
+        className,
       )}
       style={isBrand ? { backgroundColor: BRAND_NAVY_HERO } : undefined}
     >
@@ -56,63 +52,42 @@ export function PageHero({
       )}
 
       <div className="container relative z-10 mx-auto px-4 py-12 md:py-16">
-        {breadcrumbs && breadcrumbs.length > 0 && (
-          <nav
-            aria-label="Хлебные крошки"
-            className="mb-6 flex flex-wrap items-center gap-1 text-sm"
-          >
-            {breadcrumbs.map((item, index) => (
-              <span key={`${item.label}-${index}`} className="inline-flex items-center gap-1">
-                {index > 0 && (
-                  <ChevronRight
-                    className={cn("size-4 shrink-0", isBrand ? "text-white/30" : "text-[#475467]")}
-                    aria-hidden
-                  />
-                )}
-                {item.href ? (
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "transition hover:text-[#64B5F6]",
-                      isBrand ? "text-white/60" : "text-[#475467] hover:text-[#1E88E5]"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <span className={isBrand ? "text-white/90" : "text-[#101828]"}>
-                    {item.label}
-                  </span>
-                )}
-              </span>
-            ))}
-          </nav>
-        )}
-
-        <span
-          className="mb-4 block h-[4px] w-[60px] rounded-full"
-          style={{ backgroundColor: isBrand ? BRAND_BLUE : "#1E88E5" }}
-        />
-
-        <h1
+        <div
           className={cn(
-            "max-w-3xl font-heading text-[clamp(1.75rem,7vw,3rem)] font-bold leading-tight",
-            isBrand ? "text-white" : "text-[#101828]"
+            aside &&
+              "lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center lg:gap-12 xl:grid-cols-[minmax(0,1fr)_380px]",
           )}
         >
-          {title}
-        </h1>
+          <div>
+            <Breadcrumbs className="mb-6" />
 
-        {description && (
-          <p
-            className={cn(
-              "mt-4 max-w-2xl text-lg leading-relaxed md:text-xl",
-              isBrand ? "text-white/72" : "text-[#475467]"
+            <span
+              className="mb-4 block h-[4px] w-[60px] rounded-full"
+              style={{ backgroundColor: isBrand ? BRAND_BLUE : "#1E88E5" }}
+            />
+
+            <h1
+              className={cn(
+                "max-w-3xl font-heading text-[clamp(1.75rem,7vw,3rem)] font-bold leading-tight",
+                isBrand ? "text-white" : "text-[#101828]",
+              )}
+            >
+              {title}
+            </h1>
+
+            {description && (
+              <p
+                className={cn(
+                  "mt-4 max-w-2xl text-lg leading-relaxed md:text-xl",
+                  isBrand ? "text-white/72" : "text-[#475467]",
+                )}
+              >
+                {description}
+              </p>
             )}
-          >
-            {description}
-          </p>
-        )}
+          </div>
+          {aside && <div className="hidden lg:-my-6 lg:block">{aside}</div>}
+        </div>
       </div>
     </section>
   );

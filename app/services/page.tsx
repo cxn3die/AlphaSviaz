@@ -1,4 +1,5 @@
 import { PageCtaSection } from "@/components/sections/PageCtaSection";
+import { SigningIllustration } from "@/components/decorative/SigningIllustration";
 import { PageHero } from "@/components/sections/PageHero";
 import { ServicesOverviewSection } from "@/components/sections/ServicesOverviewSection";
 import { WorkStepsSection } from "@/components/sections/WorkStepsSection";
@@ -16,10 +17,7 @@ export default function ServicesPage() {
       <PageHero
         title="Услуги"
         description={siteConfig.description}
-        breadcrumbs={[
-          { label: "Главная", href: "/" },
-          { label: "Услуги" },
-        ]}
+        aside={<SigningIllustration className="mx-auto max-w-[380px]" />}
       />
       <ServicesOverviewSection />
       <WorkStepsSection />

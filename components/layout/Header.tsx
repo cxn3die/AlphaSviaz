@@ -144,16 +144,37 @@ export function Header() {
                   </Link>
 
                   <div className="pointer-events-none absolute left-0 top-full z-50 pt-2 opacity-0 translate-y-1 transition-all duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                    <div className="relative w-80 rounded-[16px] bg-white p-2 shadow-[0_12px_32px_rgba(7,26,47,0.12)] before:absolute before:-top-2 before:left-0 before:h-2 before:w-full before:content-['']">
-                      {services.map((service) => (
-                        <Link
-                          key={service.href}
-                          href={service.href}
-                          className="block whitespace-nowrap rounded-[10px] px-4 py-3 text-[16px] text-[#101828] transition hover:bg-[rgba(30,136,229,0.1)] hover:text-[#1E88E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E88E5] focus-visible:ring-offset-2"
-                        >
-                          {service.label}
-                        </Link>
-                      ))}
+                    {/* Тёмное стекло, как сама шапка — белая плашка выбивалась из стиля */}
+                    <div className="relative w-[340px] rounded-[16px] border border-white/10 bg-[#0B1E35]/95 p-2 shadow-[0_18px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl before:absolute before:-top-2 before:left-0 before:h-2 before:w-full before:content-['']">
+                      {services.map((service) => {
+                        const isCurrent = pathname === service.href;
+                        return (
+                          <Link
+                            key={service.href}
+                            href={service.href}
+                            className={cn(
+                              "group/item flex items-start gap-3 rounded-[10px] px-4 py-3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#42A5F5]",
+                              isCurrent ? "bg-white/[0.07]" : "hover:bg-white/[0.06]"
+                            )}
+                          >
+                            <span
+                              className={cn(
+                                "mt-2 size-1.5 shrink-0 rounded-full transition",
+                                isCurrent ? "bg-[#F25C1F]" : "bg-white/25 group-hover/item:bg-[#F25C1F]"
+                              )}
+                              aria-hidden
+                            />
+                            <span>
+                              <span className="block whitespace-nowrap text-[15px] font-medium text-white">
+                                {service.label}
+                              </span>
+                              {service.description && (
+                                <span className="mt-0.5 block text-[13px] text-white/45">{service.description}</span>
+                              )}
+                            </span>
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 </li>
