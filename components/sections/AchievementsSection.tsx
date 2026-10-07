@@ -115,62 +115,86 @@ function useRevealAtCenter(ref: RefObject<HTMLElement>, enabled: boolean) {
 
 const PROJECT_FORMS = ["проект", "проекта", "проектов"] as const;
 
+/** Зазор между низом цифр и первой строкой на компьютере — почти вплотную */
+const UNDER_GAP = 1;
+
 /**
- * Число проектов на главной и строки за месяц под ним.
+ * Число проектов на главной и строки за месяц рядом с ним.
  *
- * Десктоп: наведение на синюю карточку показывает «N проектов сдано
- * с начала месяца» (тем же шрифтом, медленный серо-белый перелив),
+ * Компьютер и планшет: строки под числом, почти вплотную к низу цифр,
+ * по правому краю числа. Наведение на синюю карточку показывает
+ * «N проектов сдано с начала месяца» (медленный серо-белый перелив),
  * наведение на эту строку — ещё «в среднем 10 в месяц».
- * Телефон: обе строки появляются сами, когда карточка доходит
- * до середины экрана (data-revealed на карточке). Нажимать ничего не нужно.
+ * Телефон: строки мелко справа от числа, первая — по верхнему краю цифр.
+ * Появляются сами, когда карточка доходит до середины экрана
+ * (data-revealed на карточке).
  */
 function ProjectsStat({ inView, className }: { inView: boolean; className: string }) {
   const stats = useProjectStats();
   const total = stats?.total ?? PROJECT_COUNTER.baseTotal;
 
-  let monthLine = "";
+  let month: { value: string; label: string; line: string } | null = null;
   if (stats) {
     const { currentMonth, previousMonth } = stats;
-    monthLine =
-      currentMonth.count > 0
-        ? `${currentMonth.count} ${plural(currentMonth.count, PROJECT_FORMS)} сдано с начала месяца`
-        : `${previousMonth.count} ${plural(previousMonth.count, PROJECT_FORMS)} сдано в ${MONTHS_PREPOSITIONAL[previousMonth.month - 1]}`;
+    const isCurrent = currentMonth.count > 0;
+    const count = isCurrent ? currentMonth.count : previousMonth.count;
+    const value = `${count} ${plural(count, PROJECT_FORMS)}`;
+    const label = isCurrent
+      ? "с начала месяца"
+      : `сдано в ${MONTHS_PREPOSITIONAL[previousMonth.month - 1]}`;
+    month = { value, label, line: isCurrent ? `${value} сдано ${label}` : `${value} ${label}` };
   }
 
   const numberRef = useRef<HTMLSpanElement | null>(null);
-  const metrics = useNumberMetrics(numberRef);
+  const underRef = useRef<HTMLParagraphElement | null>(null);
+  const sideRef = useRef<HTMLParagraphElement | null>(null);
+  const layout = useStatLayout(numberRef, underRef, sideRef, month?.line ?? "");
 
   const reveal =
     "opacity-0 translate-y-1 transition-[opacity,transform] duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-data-[revealed=true]:translate-y-0 group-data-[revealed=true]:opacity-100";
 
   return (
-    <div className="mt-2">
+    <div className="mt-2 flex items-start gap-2.5 md:block">
       <p className={className} aria-label={`${formatCount(total)} проектов`}>
         <span ref={numberRef} className="inline-block">
           {inView && stats ? <CountUp end={total} duration={2} separator="" /> : 0}
         </span>
       </p>
 
-      {/*
-        Строки мелкие и почти вплотную под цифрами: отступ снизу у строки
-        цифр (место под «хвосты» букв) снимается отрицательным margin.
-        Ширина блока = ширина числа, текст прижат к его правому краю.
-      */}
+      {/* Телефон: мелко справа от числа, первая строка по верхнему краю цифр */}
       <div
-        className="group/month"
-        style={metrics ? { width: metrics.width, marginTop: -metrics.gapBelow + 6 } : undefined}
+        className="min-w-0 opacity-0 transition-opacity duration-500 ease-out group-data-[revealed=true]:opacity-100 md:hidden"
+        style={layout ? { paddingTop: layout.side } : undefined}
+      >
+        <p ref={sideRef} className="text-[13px] font-semibold leading-none">
+          <span className="stat-sheen">{month?.value ?? "\u00A0"}</span>
+        </p>
+        <p className="mt-1 text-[10px] font-medium leading-tight text-white/75">
+          {month?.label ?? "\u00A0"}
+        </p>
+        <p className="mt-2.5 text-[13px] font-semibold leading-none text-white/90">
+          {stats ? `${stats.averagePerMonth} в месяц` : "\u00A0"}
+        </p>
+        <p className="mt-1 text-[10px] font-medium leading-tight text-white/65">в среднем</p>
+      </div>
+
+      {/* С md: под числом, почти вплотную к низу цифр, по правому краю числа */}
+      <div
+        className="group/month hidden md:block"
+        style={layout ? { width: layout.width, marginTop: layout.under } : undefined}
       >
         <p
+          ref={underRef}
           className={cn(
-            "text-right text-[13px] font-semibold leading-snug [text-wrap:balance] md:text-[15px] lg:text-[18px]",
+            "text-right text-[15px] font-semibold leading-none [text-wrap:balance] lg:text-[18px]",
             reveal
           )}
         >
-          <span className="stat-sheen">{monthLine || "\u00A0"}</span>
+          <span className="stat-sheen">{month?.line ?? "\u00A0"}</span>
         </p>
         <p
           className={cn(
-            "mt-0.5 text-right text-[11px] font-medium text-white/65 md:text-[12px] lg:text-[14px]",
+            "mt-1.5 text-right text-[12px] font-medium leading-none text-white/65 lg:text-[14px]",
             "opacity-0 transition-opacity duration-500 ease-out group-hover/month:opacity-100 group-data-[revealed=true]:opacity-100"
           )}
         >
@@ -182,36 +206,55 @@ function ProjectsStat({ inView, className }: { inView: boolean; className: strin
 }
 
 /**
- * Ширина числа и пустое место под цифрами внутри строки (у цифр нет
- * «хвостов», а строка оставляет под них место). Следит за шириной числа:
- * она меняется при счёте и при повороте экрана.
+ * Пустое место между краями строки и самими знаками. У числа строка
+ * выше цифр (у цифр нет «хвостов», плюс межстрочный интервал), поэтому
+ * отступы строк считаются от самих знаков, а не от блоков.
  */
-function useNumberMetrics(numberRef: RefObject<HTMLElement>) {
-  const [metrics, setMetrics] = useState<{ width: number; gapBelow: number } | null>(null);
+function glyphInsets(el: HTMLElement, ctx: CanvasRenderingContext2D) {
+  const style = getComputedStyle(el);
+  const fontSize = parseFloat(style.fontSize);
+  const lineHeight = parseFloat(style.lineHeight) || fontSize * 1.2;
+  ctx.font = `${style.fontWeight} ${fontSize}px ${style.fontFamily}`;
+  const m = ctx.measureText(el.textContent?.trim() || "0");
+  const ascent = m.fontBoundingBoxAscent;
+  const descent = m.fontBoundingBoxDescent;
+  if (!ascent || !descent) return { top: fontSize * 0.2, bottom: fontSize * 0.2 };
+  // Базовая линия делит лишнюю высоту строки поровну сверху и снизу
+  const baseline = (lineHeight - (ascent + descent)) / 2 + ascent;
+  return {
+    top: Math.max(0, baseline - m.actualBoundingBoxAscent),
+    bottom: Math.max(0, lineHeight - baseline - m.actualBoundingBoxDescent),
+  };
+}
+
+/**
+ * Ширина числа и отступы строк: под числом (компьютер) и справа от него
+ * (телефон). Пересчёт при счёте, повороте экрана и загрузке шрифтов.
+ */
+function useStatLayout(
+  numberRef: RefObject<HTMLElement>,
+  underRef: RefObject<HTMLElement>,
+  sideRef: RefObject<HTMLElement>,
+  contentKey: string
+) {
+  const [layout, setLayout] = useState<{ width: number; under: number; side: number } | null>(null);
 
   useEffect(() => {
     const el = numberRef.current;
-    if (!el) return;
     const ctx = document.createElement("canvas").getContext("2d");
+    if (!el || !ctx) return;
 
     const measure = () => {
       const rect = el.getBoundingClientRect();
       if (!rect.width) return;
-      const style = getComputedStyle(el);
-      const fontSize = parseFloat(style.fontSize);
-      let gapBelow = fontSize * 0.2;
-      if (ctx) {
-        ctx.font = `${style.fontWeight} ${fontSize}px ${style.fontFamily}`;
-        const m = ctx.measureText("0123456789");
-        const ascent = m.fontBoundingBoxAscent;
-        const descent = m.fontBoundingBoxDescent;
-        if (ascent && descent) {
-          // Высота строки = высоте блока; базовая линия делит лишнее место поровну
-          const baseline = (rect.height - (ascent + descent)) / 2 + ascent;
-          gapBelow = Math.max(0, rect.height - baseline - m.actualBoundingBoxDescent);
-        }
-      }
-      setMetrics({ width: rect.width, gapBelow });
+      const number = glyphInsets(el, ctx);
+      const under = underRef.current ? glyphInsets(underRef.current, ctx).top : 0;
+      const side = sideRef.current ? glyphInsets(sideRef.current, ctx).top : 0;
+      setLayout({
+        width: rect.width,
+        under: -number.bottom - under + UNDER_GAP,
+        side: Math.max(0, number.top - side),
+      });
     };
 
     measure();
@@ -219,9 +262,9 @@ function useNumberMetrics(numberRef: RefObject<HTMLElement>) {
     const observer = new ResizeObserver(measure);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [numberRef]);
+  }, [numberRef, underRef, sideRef, contentKey]);
 
-  return metrics;
+  return layout;
 }
 
 const containerVariants: Variants = {
@@ -353,12 +396,6 @@ function AchievementCard({
             )}
           >
             {card.label}
-            {card.id === "projects" && (
-              <span className="relative ml-2 inline-flex size-1.5 align-middle" aria-hidden>
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-white opacity-50" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-white" />
-              </span>
-            )}
           </p>
           {card.id === "projects" ? (
             <ProjectsStat inView={inView} className={cn(valueClassName, valueColor)} />
