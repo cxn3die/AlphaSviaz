@@ -56,7 +56,8 @@ export function HeroSection() {
           </div>
         </div>
 
-        <aside className="w-full overflow-hidden rounded-[20px] border border-white/15 bg-white/[0.07] backdrop-blur-md lg:mt-6">
+        {/* Только на компьютере: на телефоне и планшете фото брендов владелец попросил убрать */}
+        <aside className="hidden w-full overflow-hidden rounded-[20px] border border-white/15 bg-white/[0.07] backdrop-blur-md lg:mt-6 lg:block">
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
               src={equipment.image}

@@ -1,24 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Calculator,
-  ClipboardList,
-  HardHat,
-  Headphones,
-  Receipt,
-} from "lucide-react";
 
 import { projectTeamCopy, projectTeamRoles } from "@/lib/data/projectTeam";
 import { assetPath } from "@/lib/utils";
-
-const roleIcons = {
-  manager: Headphones,
-  engineer: Calculator,
-  production: ClipboardList,
-  crew: HardHat,
-  finance: Receipt,
-} as const;
 
 export function AboutProjectTeamSection() {
   const { eyebrow, title, subtitle } = projectTeamCopy;
@@ -69,38 +54,30 @@ export function AboutProjectTeamSection() {
             aria-hidden
           />
           <figcaption className="absolute bottom-5 left-5 right-5 text-sm text-white/80 md:bottom-6 md:left-7">
-            Планёрка по объекту: менеджер, инженер и производство собираются
-            вместе до выхода бригады на площадку
+            Планёрка по объекту: менеджер, инженер и производство собираются вместе до выхода
+            бригады на площадку
           </figcaption>
         </motion.figure>
 
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 lg:gap-5">
-          {projectTeamRoles.map((role, index) => {
-            const Icon = roleIcons[role.id as keyof typeof roleIcons];
-            return (
-              <motion.li
-                key={role.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ delay: index * 0.07, duration: 0.45 }}
-              >
-                <article className="group h-full rounded-2xl border border-white/10 bg-white/[0.04] p-6 transition duration-500 hover:border-[#42A5F5]/30 hover:bg-white/[0.06]">
-                  <Icon
-                    className="size-8 text-[#64B5F6] transition group-hover:scale-105"
-                    strokeWidth={1.5}
-                    aria-hidden
-                  />
-                  <h3 className="mt-4 font-heading text-lg font-bold text-white">
-                    {role.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/60">
-                    {role.description}
-                  </p>
-                </article>
-              </motion.li>
-            );
-          })}
+        {/*
+          Роли — простым списком под видео: название и что делает.
+          Без плашек, иконок и подписей вроде «на связи» — владелец
+          просил без украшений.
+        */}
+        <ul className="mt-10 grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-5">
+          {projectTeamRoles.map((role, index) => (
+            <motion.li
+              key={role.id}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ delay: index * 0.06, duration: 0.45, ease: "easeOut" }}
+              className="border-t border-white/15 py-5 lg:py-6"
+            >
+              <h3 className="font-heading text-lg font-semibold text-white">{role.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/60">{role.description}</p>
+            </motion.li>
+          ))}
         </ul>
       </div>
     </section>
